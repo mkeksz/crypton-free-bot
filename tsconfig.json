@@ -10,6 +10,9 @@
   "exclude": [
     "src/**/*.test.ts"
   ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
   "compilerOptions": {
     "target": "ESNext",
     "module": "CommonJS",

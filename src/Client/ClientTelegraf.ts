@@ -1,6 +1,7 @@
 import {Telegraf} from 'telegraf'
+import {Client} from '@/types/client'
+import {EventNames} from '@/types/event'
 import {EventCallback} from '@/types/telegraf'
-import {Client, EventNames} from '@/types/client'
 
 export default class ClientTelegraf implements Client {
   protected readonly telegraf: Telegraf
