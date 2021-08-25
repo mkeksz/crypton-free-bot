@@ -1,14 +1,16 @@
 import {EventContext} from '@/types/telegraf'
 
-export enum EventNames {
-  start = 'start'
-}
+export type EventExecute = (context: EventContext) => Promise<void>
 
 export enum EventTypes {
   command = 'command'
 }
 
-export type EventExecute = (context: EventContext) => Promise<void>
+export enum CommandNames {
+  start = 'start'
+}
+
+export type EventNames = CommandNames | string
 
 export interface ClientEvent {
   name: EventNames,

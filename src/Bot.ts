@@ -5,8 +5,8 @@ import {EventExecute} from '@/types/event'
 import {Client} from '@/types/client'
 
 export default class Bot {
-  private client: Client
-  private eventLoader: EventLoader
+  protected readonly client: Client
+  private readonly eventLoader: EventLoader
 
   public constructor(tokenBot: string) {
     this.client = new ClientTelegraf(tokenBot)
