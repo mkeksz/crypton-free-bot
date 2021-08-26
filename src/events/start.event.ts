@@ -6,7 +6,7 @@ const event: ClientEvent = {
   name: CommandNames.start,
   type: EventTypes.command,
   execute: async context => {
-    await context.reply(REPLIES.start, KEYBOARDS.main)
+    await context.replyWithMarkdownV2(REPLIES.start, KEYBOARDS.main)
   }
 }
 

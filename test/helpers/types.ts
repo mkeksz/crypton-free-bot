@@ -8,6 +8,7 @@ interface FakeEntity {
 
 export interface FakeContext {
   reply: SinonSpy,
+  replyWithMarkdownV2: SinonSpy,
   replyWithPhoto: SinonSpy,
   from?: {
     id: number

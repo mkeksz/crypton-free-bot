@@ -3,7 +3,8 @@ import {EventContext} from '@/types/telegraf'
 export type EventExecute = (context: EventContext) => Promise<void>
 
 export enum EventTypes {
-  command = 'command'
+  command = 'command',
+  text = 'text'
 }
 
 export enum CommandNames {

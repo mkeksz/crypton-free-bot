@@ -14,4 +14,8 @@ export default class TestBot extends Bot {
   public async sendCommand(commandName: EventNames, fakeContext: EventContext): Promise<void> {
     await this.client.executeCommand(commandName, fakeContext)
   }
+
+  public async sendText(fakeContext: EventContext): Promise<void> {
+    await this.client.executeText(fakeContext)
+  }
 }
