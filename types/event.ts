@@ -16,7 +16,8 @@ export type EventNames = CommandNames | string
 
 export enum EventTypes {
   command = 'command',
-  text = 'text'
+  text = 'text',
+  callbackQuery = 'callback_query'
 }
 
 export interface ClientEvent<T extends TypeContext = TypeContext> {

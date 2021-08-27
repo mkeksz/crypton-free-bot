@@ -22,7 +22,7 @@ describe('Bot', () => {
 
   describe('command start', () => {
     it('replyWithMarkdownV2(REPLIES.start, KEYBOARDS.main)', async () => {
-      await bot.sendCommand(CommandNames.start, contextText)
+      await bot.client.executeCommand(CommandNames.start, contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.start, KEYBOARDS.main)
     })
   })
@@ -30,7 +30,7 @@ describe('Bot', () => {
   describe('BUTTON.nft', () => {
     it('replyWithMarkdownV2(REPLIES.nftDrop)', async () => {
       fakeContext.message = {text: BUTTONS.nft}
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.nftDrop)
     })
   })
@@ -38,7 +38,7 @@ describe('Bot', () => {
   describe('BUTTON.chat', () => {
     it('replyWithMarkdownV2(REPLIES.chat)', async () => {
       fakeContext.message = {text: BUTTONS.chat}
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.chat)
     })
   })
@@ -46,7 +46,7 @@ describe('Bot', () => {
   describe('BUTTON.support', () => {
     it('replyWithMarkdownV2(REPLIES.support)', async () => {
       fakeContext.message = {text: BUTTONS.support}
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.support)
     })
   })
@@ -54,7 +54,7 @@ describe('Bot', () => {
   describe('BUTTON.ecosystem', () => {
     it('replyWithMarkdownV2(REPLIES.ecosystem)', async () => {
       fakeContext.message = {text: BUTTONS.ecosystem}
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.ecosystem)
     })
   })
@@ -62,7 +62,7 @@ describe('Bot', () => {
   describe('BUTTON.discord', () => {
     it('replyWithMarkdownV2(REPLIES.discord)', async () => {
       fakeContext.message = {text: BUTTONS.discord}
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.discord, INLINE_KEYBOARDS.discord)
     })
   })
@@ -70,7 +70,7 @@ describe('Bot', () => {
   describe('BUTTON.calendar', () => {
     it('replyWithMarkdownV2(REPLIES.calendar)', async () => {
       fakeContext.message = {text: BUTTONS.calendar}
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.calendar)
     })
   })
@@ -82,7 +82,7 @@ describe('Bot', () => {
 
       const buttons = INLINE_KEYBOARDS.trainingSections(await bot.storage.getSectionsUser(fakeContext.from.id))
 
-      await bot.sendText(contextText)
+      await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.training, buttons)
     })
   })

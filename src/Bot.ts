@@ -21,6 +21,7 @@ export default class Bot {
     await this.client.launch()
     this.startHandlingCommands()
     this.startHandlingTexts()
+    this.startHandlingCallbackQuery()
   }
 
   private startHandlingCommands(): void {
@@ -33,6 +34,11 @@ export default class Bot {
   private startHandlingTexts(): void {
     const callback = this.convertToEventCallback(this.eventLoader.textComplexExecute)
     this.client.onText(callback)
+  }
+
+  private startHandlingCallbackQuery(): void {
+    const callback = this.convertToEventCallback(this.eventLoader.callbackQueryComplexExecute)
+    this.client.onCallbackQuery(callback)
   }
 
   private convertToEventCallback<T extends TypeContext>(execute: EventExecute<T>): EventCallback<T> {

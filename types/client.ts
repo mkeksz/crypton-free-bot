@@ -4,5 +4,6 @@ export declare class Client {
   public launch(): Promise<void>
   public onCommand(commandName: EventNames, callback: EventCallback<'text'>): void
   public onText(callback: EventCallback<'text'>): void
+  public onCallbackQuery(callback: EventCallback<'callback_query'>): void
   public stop(): void
 }
