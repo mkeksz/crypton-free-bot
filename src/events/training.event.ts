@@ -2,7 +2,7 @@ import {ClientEvent, EventTypes} from '@/types/event'
 import {BUTTONS, REPLIES} from '@/src/texts'
 import {INLINE_KEYBOARDS} from '@/src/markup'
 
-const event: ClientEvent = {
+const event: ClientEvent<'text'> = {
   name: BUTTONS.training,
   type: EventTypes.text,
   execute: async (context, storage) => {

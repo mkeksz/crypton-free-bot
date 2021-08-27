@@ -1,10 +1,9 @@
-import ClientTelegraf from './Client/ClientTelegraf'
-import {EventCallback} from '@/types/telegraf'
-import EventLoader from './events/EventLoader'
-import {EventExecute} from '@/types/event'
-import {Client} from '@/types/client'
-import {Storage} from '@/types/storage'
+import {EventCallback, EventContext, EventExecute, TypeContext} from '@/types/event'
 import StoragePrisma from '@/src/Storage/StoragePrisma'
+import ClientTelegraf from './Client/ClientTelegraf'
+import EventLoader from './events/EventLoader'
+import {Storage} from '@/types/storage'
+import {Client} from '@/types/client'
 
 export default class Bot {
   protected readonly client: Client
@@ -36,8 +35,8 @@ export default class Bot {
     this.client.onText(callback)
   }
 
-  private convertToEventCallback(execute: EventExecute): EventCallback {
-    return context => execute(context, this.storage)
+  private convertToEventCallback<T extends TypeContext>(execute: EventExecute<T>): EventCallback<T> {
+    return (context: EventContext<T>) => execute(context, this.storage)
   }
 
   public stop(): void {

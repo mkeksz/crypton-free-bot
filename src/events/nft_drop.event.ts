@@ -1,7 +1,7 @@
 import {ClientEvent, EventTypes} from '@/types/event'
 import {BUTTONS, REPLIES} from '@/src/texts'
 
-const event: ClientEvent = {
+const event: ClientEvent<'text'> = {
   name: BUTTONS.nft,
   type: EventTypes.text,
   execute: async context => {

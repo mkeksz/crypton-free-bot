@@ -2,17 +2,17 @@ import {ClientEvent, EventExecute, EventTypes} from '@/types/event'
 import {loadEventsFromDirectory} from './utils'
 
 type Events = {
-  commands: ClientEvent[],
-  texts: ClientEvent[]
+  commands: ClientEvent<'text'>[],
+  texts: ClientEvent<'text'>[]
 }
 
 export default class EventLoader {
   private readonly events: Events = {commands: [], texts: []}
-  private _textComplexExecute: EventExecute = async () => {}
-  public get textComplexExecute(): EventExecute {
+  private _textComplexExecute: EventExecute<'text'> = async () => {return}
+  public get textComplexExecute(): EventExecute<'text'> {
     return this._textComplexExecute
   }
-  public get commands(): ClientEvent[] {
+  public get commands(): ClientEvent<'text'>[] {
     return [...this.events.commands]
   }
 
@@ -24,8 +24,8 @@ export default class EventLoader {
 
   private filterEvents(events: ClientEvent[]): void {
     for (const event of events) {
-      if (event.type === EventTypes.text) this.events.texts.push(event)
-      else if (event.type === EventTypes.command) this.events.commands.push(event)
+      if (event.type === EventTypes.text) this.events.texts.push(event as ClientEvent<'text'>)
+      else if (event.type === EventTypes.command) this.events.commands.push(event as ClientEvent<'text'>)
     }
   }
 

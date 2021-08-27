@@ -1,4 +1,4 @@
-import {Section, Subsection} from "@prisma/client";
+import {Section, Subsection} from '@prisma/client'
 
 export interface SectionModel extends Section {
   available: boolean

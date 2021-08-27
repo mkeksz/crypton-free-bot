@@ -2,7 +2,7 @@ import {ClientEvent, CommandNames, EventTypes} from '@/types/event'
 import {KEYBOARDS} from '@/src/markup'
 import {REPLIES} from '@/src/texts'
 
-const event: ClientEvent = {
+const event: ClientEvent<'text'> = {
   name: CommandNames.start,
   type: EventTypes.command,
   execute: async context => {

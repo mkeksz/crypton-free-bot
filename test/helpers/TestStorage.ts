@@ -1,31 +1,33 @@
 import {SectionModel, Storage, SubsectionModel} from '../../types/storage'
 
-export default class TestStorage implements Storage {
-  private sectionsOfUsers: Map<number, SectionModel[]>
-  private subsectionsOfUsers: Map<number, SubsectionModel[]>
+interface SectionTest extends SectionModel {
+  subsections: SubsectionModel[]
+}
 
-  public constructor() {
-    this.sectionsOfUsers = new Map()
-    this.subsectionsOfUsers = new Map()
-  }
+export default class TestStorage implements Storage {
+  private sectionsOfUsers: Map<number, SectionTest[]> = new Map()
 
   public async getSectionsUser(userID: number): Promise<SectionModel[]> {
     return this.sectionsOfUsers.get(userID) ?? []
   }
 
   public async getSubsectionsUserBySectionID(userID: number, sectionID: number): Promise<SubsectionModel[]> {
-    return this.subsectionsOfUsers.get(userID) ?? []
+    const sections = this.sectionsOfUsers.get(userID)
+    if (!sections) return []
+    const section = sections.find(section => section.id === sectionID)
+    return section?.subsections || []
   }
 
-  public addSectionToUser(userID: number, section: SectionModel): void {
+  public addSectionToUser(userID: number, section: SectionTest): void {
     const sections = this.sectionsOfUsers.get(userID) ?? []
     sections.push(section)
     this.sectionsOfUsers.set(userID, sections)
   }
 
-  public addSubsectionToUser(userID: number, subsection: SubsectionModel): void {
-    const subsections = this.subsectionsOfUsers.get(userID) ?? []
-    subsections.push(subsection)
-    this.sectionsOfUsers.set(userID, subsections)
+  public addSubsectionToUser(userID: number, sectionID: number, subsection: SubsectionModel): void {
+    const sections = this.sectionsOfUsers.get(userID) ?? []
+    const section = sections.find(section => section.id === sectionID)
+    if (!section) return
+    section.subsections.push(subsection)
   }
 }

@@ -1,7 +1,6 @@
 import {Telegraf} from 'telegraf'
+import {EventCallback, EventNames} from '@/types/event'
 import {Client} from '@/types/client'
-import {EventNames} from '@/types/event'
-import {EventCallback} from '@/types/telegraf'
 
 export default class ClientTelegraf implements Client {
   protected readonly telegraf: Telegraf
@@ -14,18 +13,16 @@ export default class ClientTelegraf implements Client {
     await this.telegraf.launch()
   }
 
-  public onCommand(commandName: EventNames, callback: EventCallback): void {
+  public onCommand(commandName: EventNames, callback: EventCallback<'text'>): void {
     this.telegraf.command(commandName, callback)
   }
 
-  public onText(callback: EventCallback): void {
+  public onText(callback: EventCallback<'text'>): void {
     this.telegraf.on('text', callback)
   }
 
-  public onCallbackQuery(callback: EventCallback): void {
-    this.telegraf.on('callback_query', context => {
-
-    })
+  public onCallbackQuery(callback: EventCallback<'callback_query'>): void {
+    this.telegraf.on('callback_query', callback)
   }
 
   public stop(): void {
