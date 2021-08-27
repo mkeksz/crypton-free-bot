@@ -7,7 +7,7 @@
     "build": "rimraf dist && tsc && tsc-alias",
     "prod:start": "node dist/start.js",
     "dev:start": "ts-node start.ts",
-    "lint": "eslint",
+    "lint": "eslint .",
     "test": "mocha test/**/*.test.ts",
     "prisma-studio": "npx prisma studio --browser=none",
     "prsima-scheme-push": "npx prisma db push",
