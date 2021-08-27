@@ -20,9 +20,9 @@ async function importEvent(path: string): Promise<ClientEvent> {
 
 function wrapToSafeEvent(event: ClientEvent): ClientEvent {
   const newEvent = Object.assign({}, event)
-  newEvent.execute = async context => {
+  newEvent.execute = async (...args) => {
     try {
-      await event.execute(context)
+      await event.execute(...args)
     } catch(error) {
       console.error(error)
     }

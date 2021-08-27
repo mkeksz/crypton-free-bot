@@ -1,0 +1,55 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  telegramID           Int                       @id
+  completedSections    UserCompletedSection[]
+  completedSubsections UserCompletedSubsection[]
+}
+
+model Section {
+  id                 Int                    @id @default(autoincrement())
+  serial             Int
+  textButton         String
+  alwaysAvailable    Boolean                @default(false)
+  opensSections      Section[]              @relation("OpensSections", references: [id])
+  opensAfterSections Section[]              @relation("OpensSections", references: [id])
+  subsections        Subsection[]
+  users              UserCompletedSection[]
+}
+
+model Subsection {
+  id                    Int                       @id @default(autoincrement())
+  serial                Int
+  section               Section                   @relation(fields: [sectionID], references: [id])
+  sectionID             Int
+  textButton            String
+  alwaysAvailable       Boolean                   @default(false)
+  opensSubsections      Subsection[]              @relation("OpensSubsections", references: [id])
+  opensAfterSubsections Subsection[]              @relation("OpensSubsections", references: [id])
+  users                 UserCompletedSubsection[]
+}
+
+model UserCompletedSection {
+  section   Section @relation(fields: [sectionID], references: [id])
+  sectionID Int
+  user      User    @relation(fields: [userID], references: [telegramID])
+  userID    Int
+
+  @@id([sectionID, userID])
+}
+
+model UserCompletedSubsection {
+  subsection   Subsection @relation(fields: [subsectionID], references: [id])
+  subsectionID Int
+  user         User       @relation(fields: [userID], references: [telegramID])
+  userID       Int
+
+  @@id([subsectionID, userID])
+}

@@ -3,13 +3,17 @@ import {EventCallback} from '@/types/telegraf'
 import EventLoader from './events/EventLoader'
 import {EventExecute} from '@/types/event'
 import {Client} from '@/types/client'
+import {Storage} from '@/types/storage'
+import StoragePrisma from '@/src/Storage/StoragePrisma'
 
 export default class Bot {
   protected readonly client: Client
+  protected readonly storage: Storage
   private readonly eventLoader: EventLoader
 
   public constructor(tokenBot: string) {
     this.client = new ClientTelegraf(tokenBot)
+    this.storage = new StoragePrisma()
     this.eventLoader = new EventLoader()
   }
 
@@ -33,7 +37,7 @@ export default class Bot {
   }
 
   private convertToEventCallback(execute: EventExecute): EventCallback {
-    return context => execute(context)
+    return context => execute(context, this.storage)
   }
 
   public stop(): void {

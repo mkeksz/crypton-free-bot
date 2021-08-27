@@ -1,6 +1,7 @@
 import {EventContext} from '@/types/telegraf'
+import {Storage} from '@/types/storage'
 
-export type EventExecute = (context: EventContext) => Promise<void>
+export type EventExecute = (context: EventContext, storage: Storage) => Promise<void>
 
 export enum EventTypes {
   command = 'command',

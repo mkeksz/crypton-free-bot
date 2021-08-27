@@ -30,9 +30,9 @@ export default class EventLoader {
   }
 
   private updateTextCallback(): void {
-    this._textComplexExecute = async context => {
+    this._textComplexExecute = async (context, ...args) => {
       const event = this.events.texts.find(event => event.name === context.message.text)
-      await event?.execute(context)
+      await event?.execute(context, ...args)
     }
   }
 }

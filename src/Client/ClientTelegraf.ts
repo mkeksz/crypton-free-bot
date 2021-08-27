@@ -22,6 +22,12 @@ export default class ClientTelegraf implements Client {
     this.telegraf.on('text', callback)
   }
 
+  public onCallbackQuery(callback: EventCallback): void {
+    this.telegraf.on('callback_query', context => {
+
+    })
+  }
+
   public stop(): void {
     this.telegraf.stop()
   }

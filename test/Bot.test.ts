@@ -77,10 +77,14 @@ describe('Bot', () => {
   })
 
   describe('BUTTON.training', () => {
-    it('replyWithMarkdownV2(REPLIES.training)', async () => {
+    it('replyWithMarkdownV2(REPLIES.training, INLINE_KEYBOARDS.trainingSections)', async () => {
       fakeContext.message = {text: BUTTONS.training}
+      fakeContext.from = {id: 123}
+
+      const buttons = INLINE_KEYBOARDS.trainingSections(await bot.storage.getSectionsUser(fakeContext.from.id))
+
       await bot.sendText(context)
-      assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.training)
+      assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.training, buttons)
     })
   })
 })

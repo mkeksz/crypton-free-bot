@@ -5,8 +5,8 @@ export const REPLIES = {
   support: 'Описание услуги поддержки\\. [ссылка](https://example.com)',
   calendar: 'Бесплатная версия календаря\\. [ссылка](https://example.com)',
   ecosystem: 'Превью текст экосистемы\\. [ссылка](https://example.com)',
-  discord: 'Описание Discord\\. Инлайн кнопка \\- перейти в канал',
-  training: 'Обучение криптовалюте\\. Инлайн кнопки'
+  discord: 'Описание Discord',
+  training: 'Выберите раздел обучения'
 }
 
 export const BUTTONS = {
