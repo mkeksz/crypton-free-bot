@@ -9,12 +9,12 @@
     "dev:start": "ts-node start.ts",
     "lint": "eslint .",
     "test": "mocha test/**/*.test.ts",
-    "prisma-studio": "npx prisma studio --browser=none",
-    "prisma-migrate-dev": "npx prisma migrate dev",
-    "prisma-migrate-deploy": "npx prisma migrate deploy",
-    "prsima-scheme-push": "npx prisma db push",
-    "prsima-scheme-pull": "npx prisma db pull",
-    "prisma-format": "npx prisma format"
+    "prisma-studio": "prisma studio --browser=none",
+    "prisma-migrate-dev": "prisma migrate dev",
+    "prisma-migrate-deploy": "prisma migrate deploy",
+    "prsima-scheme-push": "prisma db push",
+    "prsima-scheme-pull": "prisma db pull",
+    "prisma-format": "prisma format"
   },
   "files": [
     "/dist",
@@ -50,6 +50,7 @@
   "dependencies": {
     "@prisma/client": "^2.30.0",
     "dotenv": "^10.0.0",
+    "prisma": "^2.30.2",
     "telegraf": "^4.4.1"
   }
 }
