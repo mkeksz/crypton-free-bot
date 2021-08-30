@@ -1,52 +1,66 @@
-import {Prisma, PrismaClient, User, UserCompletedSection, UserCompletedSubsection} from '@prisma/client'
-import {SectionModel, Storage, SubsectionModel} from '@/types/storage'
+import {PrismaClient, Section} from '@prisma/client'
+import {SectionOfUser, Storage} from '@/types/storage'
 
 export default class StoragePrisma implements Storage{
   private readonly prisma: PrismaClient = new PrismaClient()
 
-  public async getSectionsUser(userTelegramID: number): Promise<SectionModel[]> {
-    const sections = await this.prisma.section.findMany()
-    const completedSections = await this.getCompletedSectionsUser(userTelegramID)
+  public async getChildSectionsOfUser(userID: number, parentSectionID: number): Promise<SectionOfUser[]> {
+    await this.addUserIfNeed(userID)
+    const sections = await this.prisma.section.findMany({
+      where: {active: true, parentSectionID},
+      include: getOptionsOfIncludeForSections(userID)
+    })
+    return sections.map(convertToSectionOfUser)
+  }
 
-    return sections.map(section => {
-      const newSection = {...section, available: false} as SectionModel
-      if (newSection.alwaysAvailable || completedSections.find(completedSection => completedSection.sectionID === newSection.id)) {
-        newSection.available = true
-      }
-      return newSection
+  public async getSectionsOfUser(userID: number, onlyParents = false): Promise<SectionOfUser[]> {
+    await this.addUserIfNeed(userID)
+    const sections = await this.prisma.section.findMany({
+      where: {active: true, parentSectionID: onlyParents ? null : undefined},
+      include: getOptionsOfIncludeForSections(userID)
+    })
+    return sections.map(convertToSectionOfUser)
+  }
+
+  public async getSectionOfUserByID(userID: number, sectionID: number): Promise<SectionOfUser | null> {
+    await this.addUserIfNeed(userID)
+    const section = await this.prisma.section.findUnique({
+      where: {id: sectionID},
+      include: getOptionsOfIncludeForSections(userID)
+    })
+    if (!section || !section.active) return null
+    return convertToSectionOfUser(section)
+  }
+
+  private async addUserIfNeed(userID: number): Promise<void> {
+    await this.prisma.user.upsert({
+      where: {telegramID: userID},
+      create: {telegramID: userID},
+      update: {},
+      select: {telegramID: true}
     })
   }
+}
 
-  public async getSubsectionsUserBySectionID(userTelegramID: number, sectionID: number): Promise<SubsectionModel[]> {
-    const subsections = await this.prisma.subsection.findMany({where: {sectionID}})
-    const completedSubsections = await this.getCompletedSubsectionsUser(userTelegramID)
 
-    return subsections.map(subsection => {
-      const newSubsection = {...subsection, available: false} as SubsectionModel
-      if (newSubsection.alwaysAvailable || completedSubsections.find(completedSubsection => completedSubsection.subsectionID === newSubsection.id)) {
-        newSubsection.available = true
-      }
-      return newSubsection
-    })
+type FullSectionInfo = (Section & {users: {userID: number}[], opensAfterSections: {users: {sectionID: number}[]}[]})
+type OptionsOfInclude = {
+  opensAfterSections: {select: {users: {select: {sectionID: true}, where: {userID: number}}}},
+  users: {select: {userID: true}, where: {userID: number}}
+}
+
+function getOptionsOfIncludeForSections(userID: number): OptionsOfInclude {
+  return {
+    users: {where: {userID}, select: {userID: true}},
+    opensAfterSections: {select: {users: {where: {userID}, select: {sectionID: true}}}}
   }
+}
 
-  private async getCompletedSubsectionsUser(userTelegramID: number): Promise<UserCompletedSubsection[]> {
-    const completedSubsections = await this.getUser(userTelegramID).completedSubsections()
-    if (!completedSubsections) await this.addUser(userTelegramID)
-    return completedSubsections || []
-  }
+function convertToSectionOfUser(section: FullSectionInfo): SectionOfUser {
+  return {...section, available: checkSectionIsAvailable(section)}
+}
 
-  private async getCompletedSectionsUser(userTelegramID: number): Promise<UserCompletedSection[]> {
-    const completedSections = await this.getUser(userTelegramID).completedSections()
-    if (!completedSections) await this.addUser(userTelegramID)
-    return completedSections || []
-  }
-
-  private async addUser(telegramID: number): Promise<void> {
-    await this.prisma.user.create({data: {telegramID}})
-  }
-
-  private getUser(telegramID: number): Prisma.Prisma__UserClient<User | null> {
-    return this.prisma.user.findUnique({where: {telegramID}})
-  }
+function checkSectionIsAvailable(section: FullSectionInfo): boolean {
+  const completedSections = section.opensAfterSections.filter(section => section.users.length > 0)
+  return section.alwaysAvailable || completedSections.length > 0 || section.users.length > 0
 }

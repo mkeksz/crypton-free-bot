@@ -1,14 +1,11 @@
-import {Section, Subsection} from '@prisma/client'
+import {Section} from '@prisma/client'
 
-export interface SectionModel extends Section {
-  available: boolean
-}
-
-export interface SubsectionModel extends Subsection {
+export interface SectionOfUser extends Section {
   available: boolean
 }
 
 export declare class Storage {
-  public getSectionsUser(userID: number): Promise<SectionModel[]>
-  public getSubsectionsUserBySectionID(userID: number, sectionID: number): Promise<SubsectionModel[]>
+  public getSectionsOfUser(userID: number, onlyParents: boolean): Promise<SectionOfUser[]>
+  public getChildSectionsOfUser(userID: number, parentSectionID: number): Promise<SectionOfUser[]>
+  public getSectionOfUserByID(userID: number, sectionID: number): Promise<SectionOfUser | null>
 }

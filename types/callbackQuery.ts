@@ -1,6 +1,6 @@
 export enum CallbackQueryName {
   section = 's',
-  subsection = 'ss'
+  backToMainSections = 'bs'
 }
 
 export interface CallbackQueryData<T = unknown> {

@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "test": "mocha test/**/*.test.ts",
     "prisma-studio": "npx prisma studio --browser=none",
+    "prisma-migrate-dev": "npx prisma migrate dev",
+    "prisma-migrate-deploy": "npx prisma migrate deploy",
     "prsima-scheme-push": "npx prisma db push",
     "prsima-scheme-pull": "npx prisma db pull",
     "prisma-format": "npx prisma format"

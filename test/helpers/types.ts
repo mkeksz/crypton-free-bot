@@ -10,6 +10,8 @@ export interface FakeContext {
   reply: SinonSpy,
   replyWithMarkdownV2: SinonSpy,
   replyWithPhoto: SinonSpy,
+  editMessageText: SinonSpy,
+  callbackQuery?: {data?: string},
   from?: {
     id: number
   },

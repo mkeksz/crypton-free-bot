@@ -5,11 +5,15 @@ import {getFakeContext} from './helpers/utils'
 import {BUTTONS, REPLIES} from '@/src/texts'
 import {FakeContext} from './helpers/types'
 import TestBot from './helpers/TestBot'
+import {describe} from 'mocha'
+import {CallbackQueryData, CallbackQueryName} from '../types/callbackQuery'
+import {SectionOfUser} from '../types/storage'
 
 describe('Bot', () => {
   const bot = new TestBot()
   let fakeContext: FakeContext
   let contextText: EventContext<'text'>
+  let contextCallbackQuery: EventContext<'callback_query'>
 
   before(async () => {
     await bot.start()
@@ -18,6 +22,7 @@ describe('Bot', () => {
   beforeEach(() => {
     fakeContext = getFakeContext()
     contextText = fakeContext as unknown as EventContext<'text'>
+    contextCallbackQuery = fakeContext as unknown as EventContext<'callback_query'>
   })
 
   describe('command start', () => {
@@ -80,10 +85,34 @@ describe('Bot', () => {
       fakeContext.message = {text: BUTTONS.training}
       fakeContext.from = {id: 123}
 
-      const buttons = INLINE_KEYBOARDS.trainingSections(await bot.storage.getSectionsUser(fakeContext.from.id))
+      const buttons = INLINE_KEYBOARDS.trainingSections(await bot.storage.getSectionsOfUser(fakeContext.from.id))
 
       await bot.client.executeText(contextText)
       assertSinon.calledOnceWithExactly(fakeContext.replyWithMarkdownV2, REPLIES.training, buttons)
     })
+  })
+
+  describe('INLINE_BUTTON.section', () => {
+    it('editMessageText(REPLIES.selectedSection, INLINE_KEYBOARDS.trainingSections)', async () => {
+      fakeContext.callbackQuery = {data: JSON.stringify({n: CallbackQueryName.section, d: 2} as CallbackQueryData)}
+      fakeContext.from = {id: 123}
+
+      const section: SectionOfUser = {id: 2, parentSectionID: null, available: true, textButton: 'test', active: true, alwaysAvailable: true, position: 0}
+      await bot.storage.addSectionToUser(fakeContext.from.id, section)
+      const sectionStorage = await bot.storage.getSectionOfUserByID(fakeContext.from.id, section.id)
+      const childSections = await bot.storage.getChildSectionsOfUser(fakeContext.from.id, section.id)
+
+      await bot.client.executeCallbackQuery(contextCallbackQuery)
+      assertSinon.calledOnceWithExactly(fakeContext.editMessageText, REPLIES.selectedSection(sectionStorage!), INLINE_KEYBOARDS.trainingSections(childSections, true))
+    })
+  })
+
+  describe('INLINE_BUTTON.backToSections', async () => {
+    fakeContext.callbackQuery = {data: JSON.stringify({n: CallbackQueryName.backToMainSections} as CallbackQueryData)}
+    fakeContext.from = {id: 123}
+
+    const buttons = INLINE_KEYBOARDS.trainingSections(await bot.storage.getSectionsOfUser(fakeContext.from.id))
+    await bot.client.executeCallbackQuery(contextCallbackQuery)
+    assertSinon.calledOnceWithExactly(fakeContext.editMessageText, REPLIES.training, buttons)
   })
 })

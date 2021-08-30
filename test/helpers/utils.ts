@@ -5,6 +5,7 @@ export function getFakeContext(): FakeContext {
   return {
     reply: sinon.fake(),
     replyWithPhoto: sinon.fake(),
-    replyWithMarkdownV2: sinon.fake()
+    replyWithMarkdownV2: sinon.fake(),
+    editMessageText: sinon.fake()
   }
 }

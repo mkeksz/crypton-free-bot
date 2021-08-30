@@ -1,12 +1,15 @@
+import {SectionOfUser} from '@/types/storage'
+
 export const REPLIES = {
-  start: 'Добро пожаловать!',
+  start: 'Добро пожаловать\\!',
   nftDrop: 'Описание NFT drop Crypton',
   chat: 'Бесплатный чат криптона: [ссылка](https://example.com)',
   support: 'Описание услуги поддержки\\. [ссылка](https://example.com)',
   calendar: 'Бесплатная версия календаря\\. [ссылка](https://example.com)',
   ecosystem: 'Превью текст экосистемы\\. [ссылка](https://example.com)',
   discord: 'Описание Discord',
-  training: 'Выберите раздел обучения'
+  training: 'Выберите раздел обучения',
+  selectedSection: getTextSelectedSection
 }
 
 export const BUTTONS = {
@@ -20,5 +23,10 @@ export const BUTTONS = {
 }
 
 export const INLINE_BUTTONS = {
-  discord: 'Перейти в канал'
+  discord: 'Перейти в канал',
+  backToSections: 'Вернуться к разделам'
+}
+
+function getTextSelectedSection(section: SectionOfUser): string {
+  return `Выбран раздел: ${section.textButton}\nВыберите подраздел.`
 }
