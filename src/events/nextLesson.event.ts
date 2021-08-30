@@ -1,0 +1,27 @@
+import {NextLessonQueryData, QueryName} from '@/types/callbackQuery'
+import {getDataFromCallbackQuery} from '@/src/events/utils'
+import {ClientEvent, EventTypes} from '@/types/event'
+import {INLINE_KEYBOARDS} from '@/src/markup'
+
+const event: ClientEvent<'callback_query'> = {
+  name: QueryName.nextLesson,
+  type: EventTypes.callbackQuery,
+  execute: async (context, storage) => {
+    const data = getDataFromCallbackQuery(context.callbackQuery)
+    const userID = context.from?.id
+    if (!userID || !data || !Array.isArray(data.d) || typeof data.d[0] !== 'number' || typeof data.d[1] !== 'number') return
+
+    const [sectionID, lessonPosition] = data.d as NextLessonQueryData
+    const section = await storage.getSectionOfUserByID(userID, sectionID)
+    if (!section || !section.available) return
+    const lesson = await storage.getLessonOfSectionByPosition(sectionID, lessonPosition)
+    if (!lesson) return
+
+    await context.editMessageText(lesson.textMarkdown, {
+      parse_mode: 'MarkdownV2',
+      reply_markup: INLINE_KEYBOARDS.nextLesson(lesson.sectionID, lesson.position + 1)
+    })
+  }
+}
+
+export default event

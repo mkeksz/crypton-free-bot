@@ -1,6 +1,6 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
-import {CallbackQueryData, CallbackQueryName} from '@/types/callbackQuery'
+import {NextLessonQueryData, QueryData, QueryName} from '@/types/callbackQuery'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
 import {SectionOfUser} from '@/types/storage'
 
@@ -19,8 +19,8 @@ export const INLINE_KEYBOARDS = {
   nextLesson: getNextLesson
 }
 
-function getNextLesson(nextPosition: number): InlineKeyboardMarkup {
-  const callbackData = {d: nextPosition, n: CallbackQueryName.nextLesson} as CallbackQueryData<number>
+function getNextLesson(sectionID: number, nextPosition: number): InlineKeyboardMarkup {
+  const callbackData = {d: [sectionID, nextPosition], n: QueryName.nextLesson} as QueryData<NextLessonQueryData>
   const jsonData = JSON.stringify(callbackData)
   const button: InlineKeyboardButton = {text: INLINE_BUTTONS.nextLesson, callback_data: jsonData}
   return {inline_keyboard: [[button]]}
@@ -28,7 +28,7 @@ function getNextLesson(nextPosition: number): InlineKeyboardMarkup {
 
 function getTrainingSections(sections: SectionOfUser[], needBackButton = false): InlineKeyboardMarkup {
   const toButton = (section: SectionOfUser): InlineKeyboardButton[] => {
-    const callbackData = {d: section.id, n: CallbackQueryName.section} as CallbackQueryData<number>
+    const callbackData = {d: section.id, n: QueryName.section} as QueryData<number>
     const jsonData = JSON.stringify(callbackData)
     return [{text: `${section.available ? '' : '🔒 '}${section.textButton}`, callback_data: jsonData}]
   }
@@ -36,7 +36,7 @@ function getTrainingSections(sections: SectionOfUser[], needBackButton = false):
   const sortSections = sections.sort((a, b) => a.position - b.position)
   const buttons = sortSections.map(toButton)
   if (needBackButton) {
-    const callbackData: CallbackQueryData = {n: CallbackQueryName.backToMainSections}
+    const callbackData: QueryData = {n: QueryName.backToMainSections}
     const jsonData = JSON.stringify(callbackData)
     buttons.push([{text: INLINE_BUTTONS.backToSections, callback_data: jsonData}])
   }

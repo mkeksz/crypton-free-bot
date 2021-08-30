@@ -28,6 +28,10 @@ export const INLINE_BUTTONS = {
   nextLesson: 'Следующий этап'
 }
 
+export const ANSWER_CB_QUERY = {
+  lockedLesson: 'Этот раздел пока закрыт. Сначала пройдите доступные разделы.'
+}
+
 function getTextSelectedSection(section: SectionOfUser): string {
   return `Выбран раздел: ${section.textButton}\nВыберите подраздел\\.`
 }

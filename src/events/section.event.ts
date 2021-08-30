@@ -1,11 +1,11 @@
-import {CallbackQueryName} from '@/types/callbackQuery'
+import {QueryName} from '@/types/callbackQuery'
 import {getDataFromCallbackQuery} from '@/src/events/utils'
 import {ClientEvent, EventTypes} from '@/types/event'
 import {INLINE_KEYBOARDS} from '@/src/markup'
-import {REPLIES} from '@/src/texts'
+import {ANSWER_CB_QUERY, REPLIES} from '@/src/texts'
 
 const event: ClientEvent<'callback_query'> = {
-  name: CallbackQueryName.section,
+  name: QueryName.section,
   type: EventTypes.callbackQuery,
   execute: async (context, storage) => {
     const data = getDataFromCallbackQuery(context.callbackQuery)
@@ -14,6 +14,11 @@ const event: ClientEvent<'callback_query'> = {
 
     const section = await storage.getSectionOfUserByID(userID, data.d)
     if (!section) return
+
+    if (!section.available) {
+      await context.answerCbQuery(ANSWER_CB_QUERY.lockedLesson)
+      return
+    }
 
     if (!section.parentSectionID) {
       const childSections = await storage.getChildSectionsOfUser(userID, section.id)
@@ -26,7 +31,7 @@ const event: ClientEvent<'callback_query'> = {
       if (!lesson) return
       await context.editMessageText(lesson.textMarkdown, {
         parse_mode: 'MarkdownV2',
-        reply_markup: INLINE_KEYBOARDS.nextLesson(0)
+        reply_markup: INLINE_KEYBOARDS.nextLesson(section.id, 1)
       })
     }
   }

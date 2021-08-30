@@ -1,7 +1,7 @@
 import {readdirSync} from 'fs'
 import {ClientEvent} from '@/types/event'
 import {CallbackQuery} from 'typegram/callback'
-import {CallbackQueryData} from '@/types/callbackQuery'
+import {QueryData} from '@/types/callbackQuery'
 
 const EVENTS_DIRECTORY = __dirname
 
@@ -32,9 +32,9 @@ function wrapToSafeEvent(event: ClientEvent): ClientEvent {
   return newEvent
 }
 
-export function getDataFromCallbackQuery(callbackQuery: CallbackQuery): CallbackQueryData | null {
+export function getDataFromCallbackQuery(callbackQuery: CallbackQuery): QueryData | null {
   if (!('data' in callbackQuery)) return null
-  const data = JSON.parse(callbackQuery.data) as CallbackQueryData
+  const data = JSON.parse(callbackQuery.data) as QueryData
   if (!data.n) return null
   return data
 }

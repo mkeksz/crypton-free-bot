@@ -1,11 +1,11 @@
-import {CallbackQueryName} from '@/types/callbackQuery'
+import {QueryName} from '@/types/callbackQuery'
 import {ClientEvent, EventTypes} from '@/types/event'
 import {getDataFromCallbackQuery} from '@/src/events/utils'
 import {INLINE_KEYBOARDS} from '@/src/markup'
 import {REPLIES} from '@/src/texts'
 
 const event: ClientEvent<'callback_query'> = {
-  name: CallbackQueryName.backToMainSections,
+  name: QueryName.backToMainSections,
   type: EventTypes.callbackQuery,
   execute: async (context, storage) => {
     const data = getDataFromCallbackQuery(context.callbackQuery)
