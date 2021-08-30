@@ -1,7 +1,7 @@
 import {SectionOfUser} from '@/types/storage'
 
 export const REPLIES = {
-  start: 'Добро пожаловать\\!',
+  start: 'Добро пожаловать',
   nftDrop: 'Описание NFT drop Crypton',
   chat: 'Бесплатный чат криптона: [ссылка](https://example.com)',
   support: 'Описание услуги поддержки\\. [ссылка](https://example.com)',
@@ -24,8 +24,9 @@ export const BUTTONS = {
 
 export const INLINE_BUTTONS = {
   discord: 'Перейти в канал',
-  backToSections: 'Вернуться к разделам',
-  nextLesson: 'Следующий этап'
+  backToSections: '« Вернуться к разделам',
+  nextLesson: 'Следующий этап »',
+  backToMenu: '« Возврат в меню'
 }
 
 export const ANSWER_CB_QUERY = {

@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && tsc && tsc-alias",
-    "prod:start": "node dist/start.js",
+    "start": "node dist/start.js",
     "dev:start": "ts-node start.ts",
     "lint": "eslint .",
     "test": "mocha test/**/*.test.ts",

@@ -39,6 +39,10 @@ function getTrainingSections(sections: SectionOfUser[], needBackButton = false):
     const callbackData: QueryData = {n: QueryName.backToMainSections}
     const jsonData = JSON.stringify(callbackData)
     buttons.push([{text: INLINE_BUTTONS.backToSections, callback_data: jsonData}])
+  } else {
+    const callbackData: QueryData = {n: QueryName.backToMenu}
+    const jsonData = JSON.stringify(callbackData)
+    buttons.push([{text: INLINE_BUTTONS.backToMenu, callback_data: jsonData}])
   }
   return {inline_keyboard: buttons}
 }

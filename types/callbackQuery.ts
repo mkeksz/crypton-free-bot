@@ -1,6 +1,7 @@
 export enum QueryName {
   section = 's',
   backToMainSections = 'bs',
+  backToMenu = 'bm',
   nextLesson = 'nl'
 }
 
