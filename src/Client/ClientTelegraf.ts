@@ -3,7 +3,7 @@ import {EventCallback, EventNames} from '@/types/event'
 import {Client} from '@/types/client'
 
 export default class ClientTelegraf implements Client {
-  protected readonly telegraf: Telegraf
+  private readonly telegraf: Telegraf
 
   public constructor(tokenBot: string) {
     this.telegraf = new Telegraf(tokenBot)

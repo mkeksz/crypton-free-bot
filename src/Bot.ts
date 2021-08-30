@@ -6,8 +6,8 @@ import {Storage} from '@/types/storage'
 import {Client} from '@/types/client'
 
 export default class Bot {
-  protected readonly client: Client
-  protected readonly storage: Storage
+  private readonly client: Client
+  private readonly storage: Storage
   private readonly eventLoader: EventLoader
 
   public constructor(tokenBot: string) {
