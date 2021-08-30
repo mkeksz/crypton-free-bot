@@ -1,6 +1,7 @@
 export enum CallbackQueryName {
   section = 's',
-  backToMainSections = 'bs'
+  backToMainSections = 'bs',
+  nextLesson = 'nl'
 }
 
 export interface CallbackQueryData<T = unknown> {

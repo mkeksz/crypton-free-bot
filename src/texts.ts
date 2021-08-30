@@ -24,9 +24,10 @@ export const BUTTONS = {
 
 export const INLINE_BUTTONS = {
   discord: 'Перейти в канал',
-  backToSections: 'Вернуться к разделам'
+  backToSections: 'Вернуться к разделам',
+  nextLesson: 'Следующий этап'
 }
 
 function getTextSelectedSection(section: SectionOfUser): string {
-  return `Выбран раздел: ${section.textButton}\nВыберите подраздел.`
+  return `Выбран раздел: ${section.textButton}\nВыберите подраздел\\.`
 }

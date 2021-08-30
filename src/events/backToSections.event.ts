@@ -13,7 +13,7 @@ const event: ClientEvent<'callback_query'> = {
     if (!userID || !data) return
 
     const sections = await storage.getSectionsOfUser(userID, true)
-    await context.editMessageText(REPLIES.training, INLINE_KEYBOARDS.trainingSections(sections))
+    await context.editMessageText(REPLIES.training, {reply_markup: INLINE_KEYBOARDS.trainingSections(sections)})
   }
 }
 

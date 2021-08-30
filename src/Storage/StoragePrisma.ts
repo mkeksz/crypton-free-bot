@@ -1,5 +1,5 @@
 import {PrismaClient, Section} from '@prisma/client'
-import {SectionOfUser, Storage} from '@/types/storage'
+import {LessonStorage, SectionOfUser, Storage} from '@/types/storage'
 
 export default class StoragePrisma implements Storage{
   private readonly prisma: PrismaClient = new PrismaClient()
@@ -30,6 +30,12 @@ export default class StoragePrisma implements Storage{
     })
     if (!section || !section.active) return null
     return convertToSectionOfUser(section)
+  }
+
+  public async getLessonOfSectionByPosition(sectionID: number, position: number): Promise<LessonStorage | null> {
+    const lessons = await this.prisma.lesson.findMany({where: {sectionID, position}})
+    if (lessons.length === 0) return null
+    return lessons[0]
   }
 
   private async addUserIfNeed(userID: number): Promise<void> {

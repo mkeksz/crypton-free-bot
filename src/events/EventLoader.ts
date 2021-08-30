@@ -37,6 +37,7 @@ export default class EventLoader {
   }
 
   private updateTextCallback(): void {
+    // TODO сделать отправку сообщения о неизвестной команде и вернуть пользователя в главное меню, если текстовая команда не найдена (это же делать во всех событиях когда ничего не возвращаем)
     this._textComplexExecute = async (context, ...args) => {
       const event = this.events.texts.find(event => event.name === context.message.text)
       await event?.execute(context, ...args)

@@ -24,6 +24,7 @@ model Section {
   parentSection      Section?               @relation("Subsections", fields: [parentSectionID], references: [id])
   parentSectionID    Int?
   users              UserCompletedSection[]
+  lessons            Lesson[]
 }
 
 model UserCompletedSection {
@@ -33,4 +34,12 @@ model UserCompletedSection {
   userID    Int
 
   @@id([sectionID, userID])
+}
+
+model Lesson {
+  id           Int     @id @default(autoincrement())
+  position     Int
+  section      Section @relation(fields: [sectionID], references: [id])
+  sectionID    Int
+  textMarkdown String
 }
