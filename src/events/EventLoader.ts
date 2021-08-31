@@ -1,5 +1,5 @@
 import {ClientEvent, EventExecute, EventTypes} from '@/types/event'
-import {getDataFromCallbackQuery, loadEventsFromDirectory} from './utils'
+import {getQueryData, loadEventsFromDirectory} from './utils'
 
 type Events = {
   commands: ClientEvent<'text'>[],
@@ -46,7 +46,7 @@ export default class EventLoader {
 
   private updateCallbackQuery(): void {
     this._callbackQueryComplexExecute = async (context, ...args) => {
-      const data = getDataFromCallbackQuery(context.callbackQuery)
+      const data = getQueryData(context.callbackQuery)
       const event = this.events.callbacksQuery.find(event => event.name === data?.n)
       await event?.execute(context, ...args)
     }

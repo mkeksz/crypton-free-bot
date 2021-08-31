@@ -1,5 +1,5 @@
 import {QueryName} from '@/types/callbackQuery'
-import {getDataFromCallbackQuery} from '@/src/events/utils'
+import {getQueryData} from '@/src/events/utils'
 import {ClientEvent, EventTypes} from '@/types/event'
 import {INLINE_KEYBOARDS} from '@/src/markup'
 import {ANSWER_CB_QUERY, REPLIES} from '@/src/texts'
@@ -9,7 +9,7 @@ const event: ClientEvent<'callback_query'> = {
   name: QueryName.section,
   type: EventTypes.callbackQuery,
   execute: async (context, storage) => {
-    const data = getDataFromCallbackQuery(context.callbackQuery)
+    const data = getQueryData(context.callbackQuery)
     const userID = context.from?.id
     if (!userID || typeof data?.d !== 'number') return
 

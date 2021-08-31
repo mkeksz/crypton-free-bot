@@ -32,7 +32,7 @@ function wrapToSafeEvent(event: ClientEvent): ClientEvent {
   return newEvent
 }
 
-export function getDataFromCallbackQuery(callbackQuery: CallbackQuery): QueryData | null {
+export function getQueryData(callbackQuery: CallbackQuery): QueryData | null {
   if (!('data' in callbackQuery)) return null
   const data = JSON.parse(callbackQuery.data) as QueryData
   if (!data.n) return null
