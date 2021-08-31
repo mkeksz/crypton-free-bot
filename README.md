@@ -14,6 +14,10 @@
 
 `npm run build`
 
+**Миграция базы данных**
+
+`npm run prisma-migrate-deploy`
+
 **Запуск бота**
 
 `npm run start`
@@ -26,6 +30,6 @@
 
 `TOKEN_BOT` - Токен вашего Telegram бота.
 
-`DATABASE_URL` - URL базы данных
+`DATABASE_URL` - URL базы данных MySQL (примеры можно найти [здесь](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference/#specify-a-mysql-data-source))
 
 ***

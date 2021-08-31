@@ -5,7 +5,6 @@ import EventLoader from './events/EventLoader'
 import {Storage} from '@/types/storage'
 import {Client} from '@/types/client'
 
-// TODO добавить возможность включать бота через вебхуки
 export default class Bot {
   private readonly client: Client
   private readonly storage: Storage
