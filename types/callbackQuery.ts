@@ -3,7 +3,8 @@ export enum QueryName {
   backToMainSections = 'bs',
   backToMenu = 'bm',
   nextLesson = 'nl',
-  wrongAnswerLesson = 'al'
+  wrongAnswerLesson = 'al',
+  startQuiz = 'sq'
 }
 
 export interface QueryData<T = unknown> {
@@ -12,4 +13,4 @@ export interface QueryData<T = unknown> {
   t?: number
 }
 
-export type NextLessonData = [sectionID: number, nextPosition: number]
+export type NextLessonOrQuizData = [sectionID: number, nextPosition: number]

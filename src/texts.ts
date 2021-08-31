@@ -12,6 +12,7 @@ export const REPLIES = {
   rightAnswerLesson: 'Верно!',
   notRightAnswerLesson: 'Ответ неверный! Попробуй ещё раз.',
   unknownCommand: 'Неизвестная команда. Возвращаю в главное меню.',
+  completedSection: getTextCompletedSection,
   selectedSection: getTextSelectedSection
 }
 
@@ -30,13 +31,19 @@ export const INLINE_BUTTONS = {
   backToSections: '« Вернуться к разделам',
   nextLesson: 'Следующий этап »',
   againLesson: '« Назад',
-  backToMenu: '« Возврат в меню'
+  backToMenu: '« Возврат в меню',
+  startQuiz: 'Пройти квиз и подтвердить свои знания',
+  laterQuiz: 'Пройти квиз позднее'
 }
 
 export const ANSWER_CB_QUERY = {
   lockedLesson: 'Этот раздел пока закрыт. Сначала пройдите доступные разделы.',
   wrongAnswer: 'Ответ неверный',
   wait: getTextWait
+}
+
+function getTextCompletedSection(sectionName: string): string {
+  return `Поздравляю! Ты закончил раздел ${sectionName}.`
 }
 
 function getTextWait(seconds: number): string {

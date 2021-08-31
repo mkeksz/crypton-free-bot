@@ -1,11 +1,11 @@
 import {CallbackQuery} from 'typegram/callback'
-import {NextLessonData, QueryData, QueryName} from '@/types/callbackQuery'
+import {NextLessonOrQuizData, QueryData, QueryName} from '@/types/callbackQuery'
 import {getUnixTime} from '@/src/utils'
 
-export function getNextLessonData(callbackQuery: CallbackQuery): NextLessonData | null {
+export function getNextLessonData(callbackQuery: CallbackQuery): NextLessonOrQuizData | null {
   const data = getQueryData(callbackQuery)
   if (!data || !Array.isArray(data.d) || typeof data.d[0] !== 'number' || typeof data.d[1] !== 'number') return null
-  return data.d as NextLessonData
+  return data.d as NextLessonOrQuizData
 }
 
 export function getNumberData(callbackQuery: CallbackQuery): number | null {

@@ -1,6 +1,6 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
-import {QueryName} from '@/types/callbackQuery'
+import {NextLessonOrQuizData, QueryName} from '@/types/callbackQuery'
 import {LessonStorage, SectionOfUser} from '@/types/storage'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
 import {createQueryDataJSON} from '@/src/events/utils.queryData'
@@ -20,7 +20,19 @@ export const INLINE_KEYBOARDS = {
   trainingSections: getTrainingSections,
   nextLesson: getNextLesson,
   answerButtons: getAnswerButtons,
-  backToLesson: getBackToLesson
+  backToLesson: getBackToLesson,
+  startQuiz: getStartQuiz,
+}
+
+function getStartQuiz(sectionID: number, parentSectionID: number, nextPosition:number): InlineKeyboardMarkup {
+  const dataStart: NextLessonOrQuizData = [sectionID, nextPosition]
+  const dataStartJSON = createQueryDataJSON(QueryName.startQuiz, dataStart)
+  const dataLaterJSON = createQueryDataJSON(QueryName.section, parentSectionID)
+
+  const buttons: InlineKeyboardButton[][] = []
+  buttons.push([{text: INLINE_BUTTONS.startQuiz, callback_data: dataStartJSON}])
+  buttons.push([{text: INLINE_BUTTONS.laterQuiz, callback_data: dataLaterJSON}])
+  return {inline_keyboard: buttons}
 }
 
 function getBackToLesson(sectionID: number, position: number): InlineKeyboardMarkup {
@@ -29,7 +41,7 @@ function getBackToLesson(sectionID: number, position: number): InlineKeyboardMar
 
 type AnswerButtonsData = [text: string, isRight: 0 | 1 | undefined][]
 function getAnswerButtons(lesson: LessonStorage, hasTime = false): InlineKeyboardMarkup {
-  const buttonsData = JSON.parse(lesson.AnswerButtons!) as AnswerButtonsData
+  const buttonsData = JSON.parse(lesson.answerButtons!) as AnswerButtonsData
 
   const buttons: InlineKeyboardButton[][] = []
   for (const buttonData of buttonsData) {

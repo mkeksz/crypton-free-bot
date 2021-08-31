@@ -18,21 +18,21 @@ export async function showLesson(context: EventContext<'callback_query'>, storag
     if (!userID || !messageID) return
     await storage.setStepUser(userID, {lessonID: lesson.id, messageID, name: StepName.waitAnswerLesson})
   }
-  if (lesson.AnswerButtons) buttons = INLINE_KEYBOARDS.answerButtons(lesson, hasTimeButtons)
+  if (lesson.answerButtons) buttons = INLINE_KEYBOARDS.answerButtons(lesson, hasTimeButtons)
   await context.editMessageText(textMarkdown, {
     parse_mode: 'HTML',
     reply_markup: buttons
   })
 }
 
-export async function getLesson(context: EventContext<'callback_query'>, storage: Storage): Promise<LessonStorage | null> {
+export async function getLesson(context: EventContext<'callback_query'>, storage: Storage): Promise<LessonStorage | null | undefined> {
   const data = getNextLessonData(context.callbackQuery)
   const userID = context.from?.id
-  if (!userID || !data) return null
+  if (!userID || !data) return undefined
 
   const [sectionID, lessonPosition] = data
   const section = await storage.getSectionOfUserByID(userID, sectionID)
-  if (!section || !section.available) return null
+  if (!section || !section.available) return undefined
   return await storage.getLessonOfSectionByPosition(sectionID, lessonPosition)
 }
 
