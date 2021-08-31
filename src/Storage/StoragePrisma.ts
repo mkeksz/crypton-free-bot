@@ -69,15 +69,15 @@ export default class StoragePrisma implements Storage{
     })
   }
 
-  public async updateCompletedSection(userID: number, sectionID: number, completedQuiz?: boolean, stars?: number): Promise<void> {
+  public async updateCompletedSection(userID: number, sectionID: number, fullCompleted?: boolean, stars?: number): Promise<void> {
     const completedSection = await this.prisma.userCompletedSection.upsert({
       where: {sectionID_userID: {userID, sectionID}},
-      create: {sectionID, userID, completedQuiz, stars},
-      update: {completedQuiz, stars},
+      create: {sectionID, userID, fullCompleted, stars},
+      update: {fullCompleted, stars},
       select: {sectionID: true, section: true}
     })
-    if (!completedQuiz) return
-    const subsections = await this.prisma.section.findMany({where: {parentSectionID: completedSection.section.parentSectionID}, select: {users: {where: {userID, completedQuiz: true}}}})
+    if (!fullCompleted) return
+    const subsections = await this.prisma.section.findMany({where: {parentSectionID: completedSection.section.parentSectionID}, select: {users: {where: {userID, fullCompleted: true}}}})
     if (subsections.length === 0) return
 
     let fullCompletedSubsections = true
@@ -100,16 +100,16 @@ function getStepFromJSON(dataJSON: string): StepOfUser | null {
   return data
 }
 
-type FullSectionInfo = (Section & {users: {userID: number, stars: number, completedQuiz: boolean}[], opensAfterSections: {users: {sectionID: number}[]}[]})
+type FullSectionInfo = (Section & {users: {userID: number, stars: number, fullCompleted: boolean}[], opensAfterSections: {users: {sectionID: number}[]}[]})
 type OptionsOfInclude = {
-  users: {select: {userID: true, stars: true, completedQuiz: true}, where: {userID: number}},
-  opensAfterSections: {select: {users: {select: {sectionID: true}, where: {userID: number, completedQuiz: true}}}}
+  users: {select: {userID: true, stars: true, fullCompleted: true}, where: {userID: number}},
+  opensAfterSections: {select: {users: {select: {sectionID: true}, where: {userID: number, fullCompleted: true}}}}
 }
 
 function getOptionsOfIncludeForSections(userID: number): OptionsOfInclude {
   return {
-    users: {where: {userID}, select: {userID: true, stars: true, completedQuiz: true}},
-    opensAfterSections: {select: {users: {where: {userID, completedQuiz: true}, select: {sectionID: true}}}}
+    users: {where: {userID}, select: {userID: true, stars: true, fullCompleted: true}},
+    opensAfterSections: {select: {users: {where: {userID, fullCompleted: true}, select: {sectionID: true}}}}
   }
 }
 
@@ -119,13 +119,13 @@ function convertToSectionOfUser(section: FullSectionInfo): SectionOfUser {
     available: checkSectionIsAvailable(section),
     stars: getStarsOfSection(section),
     availableQuiz: checkAvailableQuiz(section),
-    completedQuiz: checkCompletedQuiz(section)
+    fullCompleted: checkFullCompleted(section)
   }
 }
 
 function checkSectionIsAvailable(section: FullSectionInfo): boolean {
   const completedSections = section.opensAfterSections.filter(section => section.users.length > 0)
-  return section.alwaysAvailable || completedSections.length > 0 || (section.users.length > 0 && section.users[0].completedQuiz)
+  return section.alwaysAvailable || completedSections.length > 0 || (section.users.length > 0 && section.users[0].fullCompleted)
 }
 
 function getStarsOfSection(section: FullSectionInfo): StarsOfSection {
@@ -136,6 +136,6 @@ function checkAvailableQuiz(section: FullSectionInfo): boolean {
   return section.users.length > 0
 }
 
-function checkCompletedQuiz(section: FullSectionInfo): boolean {
-  return section.users.length > 0 ? section.users[0].completedQuiz : false
+function checkFullCompleted(section: FullSectionInfo): boolean {
+  return section.users.length > 0 ? section.users[0].fullCompleted : false
 }

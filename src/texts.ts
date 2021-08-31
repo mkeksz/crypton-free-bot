@@ -14,7 +14,7 @@ export const REPLIES = {
   unknownCommand: 'Неизвестная команда. Возвращаю в главное меню.',
   completedSection: getTextCompletedSection,
   selectedSection: getTextSelectedSection,
-  completedQuiz: getTextCompletedQuiz,
+  fullCompleted: getTextFullCompleted,
   newSections: getTextNewSections
 }
 
@@ -48,7 +48,7 @@ function getTextNewSections(sectionNames: string[]): string {
   return `Вам доступны новые разделы:\n${sectionNames.join('\n')}`
 }
 
-function getTextCompletedQuiz(rightAnswers: number, questions: number, stars: number): string {
+function getTextFullCompleted(rightAnswers: number, questions: number, stars: number): string {
   return `Quiz пройден!\n${rightAnswers} верных ответов из ${questions}.\nПолучено звёзд: ${stars}`
 }
 

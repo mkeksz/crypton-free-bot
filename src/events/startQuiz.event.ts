@@ -26,7 +26,7 @@ const event: ClientEvent<'callback_query'> = {
 
       const afterSections = await storage.getSectionsOfUser(userID, false)
 
-      await context.editMessageText(REPLIES.completedQuiz(numRightAnswers, position, stars))
+      await context.editMessageText(REPLIES.fullCompleted(numRightAnswers, position, stars))
       await sendNewAvailableSections(context, beforeSections, afterSections)
       return
     }

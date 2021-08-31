@@ -10,7 +10,7 @@ export interface SectionOfUser extends Section {
   available: boolean,
   stars: StarsOfSection,
   availableQuiz: boolean,
-  completedQuiz: boolean
+  fullCompleted: boolean
 }
 export interface StepOfUser {
   lessonID?: number,
@@ -22,7 +22,7 @@ export type LessonStorage = Lesson
 
 export declare class Storage {
   public getQuizOfSectionByPosition(sectionID: number, position: number): Promise<QuizStorage | null>
-  public updateCompletedSection(userID: number, sectionID: number, completedQuiz?: boolean, stars?: number): Promise<void>
+  public updateCompletedSection(userID: number, sectionID: number, fullCompleted?: boolean, stars?: number): Promise<void>
   public setStepUser(userID: number, stepData: StepOfUser | null): Promise<void>
   public getStepUser(userID: number): Promise<StepOfUser | null>
   public getLessonOfSectionByPosition(sectionID: number, position: number): Promise<LessonStorage | null>
