@@ -1,8 +1,8 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
 import {NextLessonQueryData, QueryData, QueryName} from '@/types/callbackQuery'
+import {LessonStorage, SectionOfUser} from '@/types/storage'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
-import {SectionOfUser} from '@/types/storage'
 
 export const KEYBOARDS = {
   main: Markup.keyboard([
@@ -16,7 +16,23 @@ export const KEYBOARDS = {
 export const INLINE_KEYBOARDS = {
   discord: Markup.inlineKeyboard([[{text: INLINE_BUTTONS.discord, url: 'link-to-discord.ru'}]]),
   trainingSections: getTrainingSections,
-  nextLesson: getNextLesson
+  nextLesson: getNextLesson,
+  answerButtons: getAnswerButtons
+}
+
+// TODO объявить функцию для генерации объекта QueryData, чтобы не создавать вручную
+type AnswerButtonsData = [text: string, isRight: 0 | 1 | undefined][]
+function getAnswerButtons(lesson: LessonStorage): InlineKeyboardMarkup {
+  const buttonsData = JSON.parse(lesson.AnswerButtons!) as AnswerButtonsData
+
+  const buttons: InlineKeyboardButton[][] = []
+  for (const buttonData of buttonsData) {
+    let callbackData = {d: [lesson.sectionID, lesson.position + 1], n: QueryName.nextLesson} as QueryData
+    if (!buttonData[1]) callbackData = {n: QueryName.wrongAnswerLesson}
+    const jsonData = JSON.stringify(callbackData)
+    buttons.push([{text: buttonData[0], callback_data: jsonData}])
+  }
+  return {inline_keyboard: buttons}
 }
 
 function getNextLesson(sectionID: number, nextPosition: number): InlineKeyboardMarkup {

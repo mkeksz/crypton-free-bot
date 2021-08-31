@@ -1,7 +1,7 @@
 {
-  "name": "crypton-training-free-bot",
+  "name": "crypton-free-bot",
   "version": "1.0.0",
-  "description": "Обучающий криптовалютам бот Crypton Academy.",
+  "description": "Бесплатный бот Crypton Academy.",
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && tsc && tsc-alias",

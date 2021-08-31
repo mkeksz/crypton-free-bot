@@ -3,6 +3,7 @@ import {getDataFromCallbackQuery} from '@/src/events/utils'
 import {ClientEvent, EventTypes} from '@/types/event'
 import {INLINE_KEYBOARDS} from '@/src/markup'
 import {ANSWER_CB_QUERY, REPLIES} from '@/src/texts'
+import {showLesson} from '@/src/events/utils.context'
 
 const event: ClientEvent<'callback_query'> = {
   name: QueryName.section,
@@ -29,10 +30,7 @@ const event: ClientEvent<'callback_query'> = {
     } else {
       const lesson = await storage.getLessonOfSectionByPosition(section.id, 0)
       if (!lesson) return
-      await context.editMessageText(lesson.textMarkdown, {
-        parse_mode: 'MarkdownV2',
-        reply_markup: INLINE_KEYBOARDS.nextLesson(section.id, 1)
-      })
+      await showLesson(context, lesson)
     }
   }
 }

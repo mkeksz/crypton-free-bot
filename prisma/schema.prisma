@@ -37,9 +37,12 @@ model UserCompletedSection {
 }
 
 model Lesson {
-  id           Int     @id @default(autoincrement())
-  position     Int
-  section      Section @relation(fields: [sectionID], references: [id])
-  sectionID    Int
-  textMarkdown String
+  id            Int     @id @default(autoincrement())
+  position      Int
+  section       Section @relation(fields: [sectionID], references: [id])
+  sectionID     Int
+  text          String
+  media         String?
+  AnswerButtons String?
+  answer        String?
 }

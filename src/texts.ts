@@ -30,7 +30,8 @@ export const INLINE_BUTTONS = {
 }
 
 export const ANSWER_CB_QUERY = {
-  lockedLesson: 'Этот раздел пока закрыт. Сначала пройдите доступные разделы.'
+  lockedLesson: 'Этот раздел пока закрыт. Сначала пройдите доступные разделы.',
+  wrongAnswer: 'Ответ неверный'
 }
 
 function getTextSelectedSection(section: SectionOfUser): string {

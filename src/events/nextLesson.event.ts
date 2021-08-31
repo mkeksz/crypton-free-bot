@@ -1,7 +1,7 @@
 import {NextLessonQueryData, QueryName} from '@/types/callbackQuery'
 import {getDataFromCallbackQuery} from '@/src/events/utils'
 import {ClientEvent, EventTypes} from '@/types/event'
-import {INLINE_KEYBOARDS} from '@/src/markup'
+import {showLesson} from '@/src/events/utils.context'
 
 const event: ClientEvent<'callback_query'> = {
   name: QueryName.nextLesson,
@@ -16,11 +16,7 @@ const event: ClientEvent<'callback_query'> = {
     if (!section || !section.available) return
     const lesson = await storage.getLessonOfSectionByPosition(sectionID, lessonPosition)
     if (!lesson) return
-
-    await context.editMessageText(lesson.textMarkdown, {
-      parse_mode: 'MarkdownV2',
-      reply_markup: INLINE_KEYBOARDS.nextLesson(lesson.sectionID, lesson.position + 1)
-    })
+    await showLesson(context, lesson)
   }
 }
 

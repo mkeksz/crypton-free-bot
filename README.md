@@ -1,4 +1,4 @@
-# Бесплатный бот для обучения Crypton Academy
+# Бесплатный бот Crypton Academy
 
 ***
 
