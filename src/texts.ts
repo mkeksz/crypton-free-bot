@@ -31,7 +31,12 @@ export const INLINE_BUTTONS = {
 
 export const ANSWER_CB_QUERY = {
   lockedLesson: 'Этот раздел пока закрыт. Сначала пройдите доступные разделы.',
-  wrongAnswer: 'Ответ неверный'
+  wrongAnswer: 'Ответ неверный',
+  wait: getTextWait
+}
+
+function getTextWait(seconds: number): string {
+  return `Подождите ${seconds}с.`
 }
 
 function getTextSelectedSection(section: SectionOfUser): string {

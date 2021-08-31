@@ -1,5 +1,6 @@
 import {CallbackQuery} from 'typegram/callback'
 import {NextLessonData, QueryData, QueryName} from '@/types/callbackQuery'
+import {getUnixTime} from '@/src/utils'
 
 export function getNextLessonData(callbackQuery: CallbackQuery): NextLessonData | null {
   const data = getQueryData(callbackQuery)
@@ -13,6 +14,18 @@ export function getNumberData(callbackQuery: CallbackQuery): number | null {
   return data.d
 }
 
+export function getWaitSecondsData(callbackQuery: CallbackQuery): number {
+  const time = getTimeData(callbackQuery) ?? 0
+  const currentTime = getUnixTime()
+  return 60 - (currentTime - time)
+}
+
+export function getTimeData(callbackQuery: CallbackQuery): number | null {
+  const data = getQueryData(callbackQuery)
+  if (!data || typeof data.t !== 'number') return null
+  return data.t
+}
+
 export function getQueryData(callbackQuery: CallbackQuery): QueryData | null {
   if (!('data' in callbackQuery)) return null
   const data = JSON.parse(callbackQuery.data) as QueryData
@@ -20,7 +33,7 @@ export function getQueryData(callbackQuery: CallbackQuery): QueryData | null {
   return data
 }
 
-export function createQueryDataJSON<T = unknown>(name: QueryName, data?: T): string {
-  const callbackData = {d: data, n: name} as QueryData<T>
+export function createQueryDataJSON<T = unknown>(name: QueryName, data?: T, unixTime?: number): string {
+  const callbackData = {d: data, n: name, t: unixTime} as QueryData<T>
   return JSON.stringify(callbackData)
 }

@@ -8,7 +8,8 @@ export enum QueryName {
 
 export interface QueryData<T = unknown> {
   n: QueryName,
-  d?: T
+  d?: T,
+  t?: number
 }
 
 export type NextLessonData = [sectionID: number, nextPosition: number]

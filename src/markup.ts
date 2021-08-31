@@ -4,6 +4,7 @@ import {QueryName} from '@/types/callbackQuery'
 import {LessonStorage, SectionOfUser} from '@/types/storage'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
 import {createQueryDataJSON} from '@/src/events/utils.queryData'
+import {getUnixTime} from '@/src/utils'
 
 export const KEYBOARDS = {
   main: Markup.keyboard([
@@ -22,14 +23,15 @@ export const INLINE_KEYBOARDS = {
 }
 
 type AnswerButtonsData = [text: string, isRight: 0 | 1 | undefined][]
-function getAnswerButtons(lesson: LessonStorage): InlineKeyboardMarkup {
+function getAnswerButtons(lesson: LessonStorage, isWrong = false): InlineKeyboardMarkup {
   const buttonsData = JSON.parse(lesson.AnswerButtons!) as AnswerButtonsData
 
   const buttons: InlineKeyboardButton[][] = []
   for (const buttonData of buttonsData) {
-    const dataJSON = buttonData[1]
-      ? createQueryDataJSON(QueryName.nextLesson, [lesson.sectionID, lesson.position + 1])
-      : createQueryDataJSON(QueryName.wrongAnswerLesson)
+    const name = buttonData[1] ? QueryName.nextLesson : QueryName.wrongAnswerLesson
+    const data = [lesson.sectionID, lesson.position + (buttonData[1] ? 1 : 0)]
+    const time = isWrong ? getUnixTime() : undefined
+    const dataJSON = createQueryDataJSON(name, data, time)
     buttons.push([{text: buttonData[0], callback_data: dataJSON}])
   }
   return {inline_keyboard: buttons}
