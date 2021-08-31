@@ -1,5 +1,5 @@
 import {CallbackQuery} from 'typegram/callback'
-import {NextLessonData, QueryData} from '@/types/callbackQuery'
+import {NextLessonData, QueryData, QueryName} from '@/types/callbackQuery'
 
 export function getNextLessonData(callbackQuery: CallbackQuery): NextLessonData | null {
   const data = getQueryData(callbackQuery)
@@ -18,4 +18,9 @@ export function getQueryData(callbackQuery: CallbackQuery): QueryData | null {
   const data = JSON.parse(callbackQuery.data) as QueryData
   if (!data.n) return null
   return data
+}
+
+export function createQueryDataJSON<T = unknown>(name: QueryName, data?: T): string {
+  const callbackData = {d: data, n: name} as QueryData<T>
+  return JSON.stringify(callbackData)
 }
