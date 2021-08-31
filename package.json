@@ -14,6 +14,7 @@
     "prisma-migrate-deploy": "prisma migrate deploy",
     "prsima-scheme-push": "prisma db push",
     "prsima-scheme-pull": "prisma db pull",
+    "prisma-generate": "prisma generate",
     "prisma-format": "prisma format"
   },
   "files": [

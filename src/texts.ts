@@ -13,7 +13,9 @@ export const REPLIES = {
   notRightAnswerLesson: 'Ответ неверный! Попробуй ещё раз.',
   unknownCommand: 'Неизвестная команда. Возвращаю в главное меню.',
   completedSection: getTextCompletedSection,
-  selectedSection: getTextSelectedSection
+  selectedSection: getTextSelectedSection,
+  completedQuiz: getTextCompletedQuiz,
+  newSections: getTextNewSections
 }
 
 export const BUTTONS = {
@@ -40,6 +42,14 @@ export const ANSWER_CB_QUERY = {
   lockedLesson: 'Этот раздел пока закрыт. Сначала пройдите доступные разделы.',
   wrongAnswer: 'Ответ неверный',
   wait: getTextWait
+}
+
+function getTextNewSections(sectionNames: string[]): string {
+  return `Вам доступны новые разделы:\n${sectionNames.join('\n')}`
+}
+
+function getTextCompletedQuiz(rightAnswers: number, questions: number, stars: number): string {
+  return `Quiz пройден!\n${rightAnswers} верных ответов из ${questions}.\nПолучено звёзд: ${stars}`
 }
 
 function getTextCompletedSection(sectionName: string): string {

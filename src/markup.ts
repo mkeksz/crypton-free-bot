@@ -1,6 +1,6 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
-import {NextLessonOrQuizData, QueryName} from '@/types/callbackQuery'
+import {NextQuizData, QueryName} from '@/types/callbackQuery'
 import {LessonStorage, SectionOfUser} from '@/types/storage'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
 import {createQueryDataJSON} from '@/src/events/utils.queryData'
@@ -24,8 +24,8 @@ export const INLINE_KEYBOARDS = {
   startQuiz: getStartQuiz,
 }
 
-function getStartQuiz(sectionID: number, parentSectionID: number, nextPosition:number): InlineKeyboardMarkup {
-  const dataStart: NextLessonOrQuizData = [sectionID, nextPosition]
+function getStartQuiz(sectionID: number, parentSectionID: number): InlineKeyboardMarkup {
+  const dataStart: NextQuizData = [sectionID, 0, 0]
   const dataStartJSON = createQueryDataJSON(QueryName.startQuiz, dataStart)
   const dataLaterJSON = createQueryDataJSON(QueryName.section, parentSectionID)
 
@@ -64,9 +64,16 @@ function getTrainingSections(sections: SectionOfUser[], needBackButton = false):
   const toButton = (section: SectionOfUser): InlineKeyboardButton[] => {
     const dataJSON = createQueryDataJSON(QueryName.section, section.id)
     const button = [{text: `${section.available ? '' : '🔒 '}${section.textButton}`, callback_data: dataJSON}]
-    if (section.availableQuiz) {
-      const dataQuizJSON = createQueryDataJSON<NextLessonOrQuizData>(QueryName.startQuiz, [section.id, 0])
-      button.push({text: 'Quiz', callback_data: dataQuizJSON})
+    if (section.availableQuiz && section.parentSectionID) {
+      const dataQuizJSON = createQueryDataJSON<NextQuizData>(QueryName.startQuiz, [section.id, 0, 0])
+      let text = 'Quiz'
+      if (section.stars > 0) {
+        text += ' '
+        for (let i = 0; i < section.stars; i++) {
+          text += '⭐️'
+        }
+      }
+      button.push({text, callback_data: dataQuizJSON})
     }
     return button
   }

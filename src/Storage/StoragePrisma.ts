@@ -1,8 +1,14 @@
 import {PrismaClient, Section} from '@prisma/client'
-import {LessonStorage, SectionOfUser, StarsOfSection, StepOfUser, Storage} from '@/types/storage'
+import {LessonStorage, QuizStorage, SectionOfUser, StarsOfSection, StepOfUser, Storage} from '@/types/storage'
 
 export default class StoragePrisma implements Storage{
   private readonly prisma: PrismaClient = new PrismaClient()
+
+  public async getQuizOfSectionByPosition(sectionID: number, position: number): Promise<QuizStorage | null> {
+    const quiz = await this.prisma.quiz.findMany({where: {sectionID, position}})
+    if (quiz.length === 0) return null
+    return quiz[0]
+  }
 
   public async setStepUser(userID: number, stepData: StepOfUser | null): Promise<void> {
     await this.addUserIfNeed(userID)
@@ -64,12 +70,26 @@ export default class StoragePrisma implements Storage{
   }
 
   public async updateCompletedSection(userID: number, sectionID: number, completedQuiz?: boolean, stars?: number): Promise<void> {
-    await this.prisma.userCompletedSection.upsert({
+    const completedSection = await this.prisma.userCompletedSection.upsert({
       where: {sectionID_userID: {userID, sectionID}},
       create: {sectionID, userID, completedQuiz, stars},
       update: {completedQuiz, stars},
-      select: {userID: true}
+      select: {sectionID: true, section: true}
     })
+    if (!completedQuiz) return
+    const subsections = await this.prisma.section.findMany({where: {parentSectionID: completedSection.section.parentSectionID}, select: {users: {where: {userID, completedQuiz: true}}}})
+    if (subsections.length === 0) return
+
+    let fullCompletedSubsections = true
+    for (const subsection of subsections) {
+      if (subsection.users.length === 0) {
+        fullCompletedSubsections = false
+        break
+      }
+    }
+
+    if (!fullCompletedSubsections || !completedSection.section.parentSectionID) return
+    await this.updateCompletedSection(userID, completedSection.section.parentSectionID, true)
   }
 }
 
@@ -98,7 +118,8 @@ function convertToSectionOfUser(section: FullSectionInfo): SectionOfUser {
     ...section,
     available: checkSectionIsAvailable(section),
     stars: getStarsOfSection(section),
-    availableQuiz: checkAvailableQuiz(section)
+    availableQuiz: checkAvailableQuiz(section),
+    completedQuiz: checkCompletedQuiz(section)
   }
 }
 
@@ -113,4 +134,8 @@ function getStarsOfSection(section: FullSectionInfo): StarsOfSection {
 
 function checkAvailableQuiz(section: FullSectionInfo): boolean {
   return section.users.length > 0
+}
+
+function checkCompletedQuiz(section: FullSectionInfo): boolean {
+  return section.users.length > 0 ? section.users[0].completedQuiz : false
 }

@@ -13,4 +13,5 @@ export interface QueryData<T = unknown> {
   t?: number
 }
 
-export type NextLessonOrQuizData = [sectionID: number, nextPosition: number]
+export type NextLessonData = [sectionID: number, nextPosition: number]
+export type NextQuizData = [sectionID: number, nextPosition: number, numRightAnswers: number]

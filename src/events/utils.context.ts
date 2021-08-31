@@ -1,9 +1,10 @@
-import {InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
-import {getNextLessonData} from '@/src/events/utils.queryData'
-import {LessonStorage, StepName, Storage} from '@/types/storage'
+import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
+import {createQueryDataJSON, getNextLesson} from '@/src/events/utils.queryData'
+import {LessonStorage, QuizStorage, StepName, Storage} from '@/types/storage'
 import {INLINE_KEYBOARDS, KEYBOARDS} from '@/src/markup'
 import {EventContext} from '@/types/event'
 import {REPLIES} from '@/src/texts'
+import {NextQuizData, QueryName} from '@/types/callbackQuery'
 
 type ReplyMarkup = InlineKeyboardMarkup | undefined
 export async function showLesson(context: EventContext<'callback_query'>, storage: Storage, lesson: LessonStorage, hasTimeButtons = false): Promise<void> {
@@ -26,7 +27,7 @@ export async function showLesson(context: EventContext<'callback_query'>, storag
 }
 
 export async function getLesson(context: EventContext<'callback_query'>, storage: Storage): Promise<LessonStorage | null | undefined> {
-  const data = getNextLessonData(context.callbackQuery)
+  const data = getNextLesson(context.callbackQuery)
   const userID = context.from?.id
   if (!userID || !data) return undefined
 
@@ -38,4 +39,21 @@ export async function getLesson(context: EventContext<'callback_query'>, storage
 
 export async function goToMainMenu(context: EventContext, text = REPLIES.unknownCommand): Promise<void> {
   await context.reply(text, KEYBOARDS.main)
+}
+
+type ButtonsQuizData = [text: string, isRight: 0 | 1 | undefined][]
+export async function showQuiz(context: EventContext<'callback_query'>, storage: Storage, quiz: QuizStorage, numRightAnswers: number): Promise<void> {
+  const quizButtons = JSON.parse(quiz.buttons) as ButtonsQuizData
+  const buttons: InlineKeyboardButton[][] = []
+
+  for (const [text, isRight] of quizButtons) {
+    const data: NextQuizData = [quiz.sectionID, quiz.position + 1, isRight ? numRightAnswers + 1 : numRightAnswers]
+    const dataJSON = createQueryDataJSON(QueryName.startQuiz, data)
+    const inlineButton: InlineKeyboardButton = {text, callback_data: dataJSON}
+    buttons.push([inlineButton])
+  }
+
+  await context.editMessageText(quiz.text, {
+    reply_markup: {inline_keyboard: buttons}
+  })
 }
