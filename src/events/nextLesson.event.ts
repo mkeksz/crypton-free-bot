@@ -16,7 +16,7 @@ const event: ClientEvent<'callback_query'> = {
 
     const lesson = await getLesson(context, storage)
     if (!lesson) return
-    await showLesson(context, lesson)
+    await showLesson(context, storage, lesson)
   }
 }
 

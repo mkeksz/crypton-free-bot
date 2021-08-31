@@ -18,6 +18,7 @@
     "rules": {
         "quotes": ["warn", "single"],
         "semi": ["warn", "never"],
+        "no-empty": ["warn", {"allowEmptyCatch": true}],
         "@typescript-eslint/explicit-member-accessibility": "warn",
         "@typescript-eslint/no-non-null-assertion": "off"
     }

@@ -12,7 +12,7 @@ export type EventExecute<T extends TypeContext = TypeContext> = (context: EventC
 export enum CommandNames {
   start = 'start'
 }
-export type EventNames = CommandNames | string
+export type EventNames = string
 
 export enum EventTypes {
   command = 'command',

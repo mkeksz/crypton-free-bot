@@ -30,7 +30,7 @@ const event: ClientEvent<'callback_query'> = {
     } else {
       const lesson = await storage.getLessonOfSectionByPosition(section.id, 0)
       if (!lesson) return
-      await showLesson(context, lesson)
+      await showLesson(context, storage, lesson)
     }
   }
 }

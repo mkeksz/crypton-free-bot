@@ -1,8 +1,24 @@
 import {PrismaClient, Section} from '@prisma/client'
-import {LessonStorage, SectionOfUser, Storage} from '@/types/storage'
+import {LessonStorage, SectionOfUser, StepOfUser, Storage} from '@/types/storage'
 
 export default class StoragePrisma implements Storage{
   private readonly prisma: PrismaClient = new PrismaClient()
+
+  public async setStepUser(userID: number, stepData: StepOfUser | null): Promise<void> {
+    await this.addUserIfNeed(userID)
+    const step = stepData ? JSON.stringify(stepData) : null
+    await this.prisma.user.update({where: {telegramID: userID}, data: {step}})
+  }
+
+  public async getStepUser(userID: number): Promise<StepOfUser | null> {
+    const user = await this.prisma.user.findUnique({where: {telegramID: userID}})
+    if (!user?.step) return null
+    return getStepFromJSON(user.step)
+  }
+
+  public async getLessonByID(id: number): Promise<LessonStorage | null> {
+    return await this.prisma.lesson.findUnique({where: {id}})
+  }
 
   public async getChildSectionsOfUser(userID: number, parentSectionID: number): Promise<SectionOfUser[]> {
     await this.addUserIfNeed(userID)
@@ -48,6 +64,12 @@ export default class StoragePrisma implements Storage{
   }
 }
 
+
+function getStepFromJSON(dataJSON: string): StepOfUser | null {
+  const data = JSON.parse(dataJSON) as StepOfUser
+  if (!data.name) return null
+  return data
+}
 
 type FullSectionInfo = (Section & {users: {userID: number}[], opensAfterSections: {users: {sectionID: number}[]}[]})
 type OptionsOfInclude = {

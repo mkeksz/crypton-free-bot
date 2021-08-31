@@ -1,12 +1,12 @@
 import {ClientEvent, CommandNames, EventTypes} from '@/types/event'
-import {KEYBOARDS} from '@/src/markup'
 import {REPLIES} from '@/src/texts'
+import {goToMainMenu} from '@/src/events/utils.context'
 
 const event: ClientEvent<'text'> = {
   name: CommandNames.start,
   type: EventTypes.command,
   execute: async context => {
-    await context.replyWithMarkdownV2(REPLIES.start, KEYBOARDS.main)
+    await goToMainMenu(context, REPLIES.start)
   }
 }
 

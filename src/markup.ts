@@ -19,27 +19,32 @@ export const INLINE_KEYBOARDS = {
   discord: Markup.inlineKeyboard([[{text: INLINE_BUTTONS.discord, url: 'link-to-discord.ru'}]]),
   trainingSections: getTrainingSections,
   nextLesson: getNextLesson,
-  answerButtons: getAnswerButtons
+  answerButtons: getAnswerButtons,
+  backToLesson: getBackToLesson
+}
+
+function getBackToLesson(sectionID: number, position: number): InlineKeyboardMarkup {
+  return getNextLesson(sectionID, position, true)
 }
 
 type AnswerButtonsData = [text: string, isRight: 0 | 1 | undefined][]
-function getAnswerButtons(lesson: LessonStorage, isWrong = false): InlineKeyboardMarkup {
+function getAnswerButtons(lesson: LessonStorage, hasTime = false): InlineKeyboardMarkup {
   const buttonsData = JSON.parse(lesson.AnswerButtons!) as AnswerButtonsData
 
   const buttons: InlineKeyboardButton[][] = []
   for (const buttonData of buttonsData) {
     const name = buttonData[1] ? QueryName.nextLesson : QueryName.wrongAnswerLesson
     const data = [lesson.sectionID, lesson.position + (buttonData[1] ? 1 : 0)]
-    const time = isWrong ? getUnixTime() : undefined
+    const time = hasTime ? getUnixTime() : undefined
     const dataJSON = createQueryDataJSON(name, data, time)
     buttons.push([{text: buttonData[0], callback_data: dataJSON}])
   }
   return {inline_keyboard: buttons}
 }
 
-function getNextLesson(sectionID: number, nextPosition: number): InlineKeyboardMarkup {
+function getNextLesson(sectionID: number, nextPosition: number, isBack = false): InlineKeyboardMarkup {
   const dataJSON = createQueryDataJSON(QueryName.nextLesson, [sectionID, nextPosition])
-  const button: InlineKeyboardButton = {text: INLINE_BUTTONS.nextLesson, callback_data: dataJSON}
+  const button: InlineKeyboardButton = {text: isBack ? INLINE_BUTTONS.againLesson : INLINE_BUTTONS.nextLesson, callback_data: dataJSON}
   return {inline_keyboard: [[button]]}
 }
 

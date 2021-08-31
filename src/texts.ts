@@ -9,6 +9,9 @@ export const REPLIES = {
   ecosystem: 'Превью текст экосистемы\\. [ссылка](https://example.com)',
   discord: 'Описание Discord',
   training: 'Выберите раздел обучения',
+  rightAnswerLesson: 'Верно!',
+  notRightAnswerLesson: 'Ответ неверный! Попробуй ещё раз.',
+  unknownCommand: 'Неизвестная команда. Возвращаю в главное меню.',
   selectedSection: getTextSelectedSection
 }
 
@@ -26,6 +29,7 @@ export const INLINE_BUTTONS = {
   discord: 'Перейти в канал',
   backToSections: '« Вернуться к разделам',
   nextLesson: 'Следующий этап »',
+  againLesson: '« Назад',
   backToMenu: '« Возврат в меню'
 }
 

@@ -17,7 +17,7 @@ const event: ClientEvent<'callback_query'> = {
     const lesson = await getLesson(context, storage)
     if (!lesson) return
     await context.answerCbQuery(ANSWER_CB_QUERY.wrongAnswer)
-    await showLesson(context, lesson, true)
+    await showLesson(context, storage, lesson, true)
   }
 }
 
