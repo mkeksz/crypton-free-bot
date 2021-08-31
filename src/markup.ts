@@ -1,6 +1,6 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
-import {NextLessonQueryData, QueryData, QueryName} from '@/types/callbackQuery'
+import {NextLessonData, QueryData, QueryName} from '@/types/callbackQuery'
 import {LessonStorage, SectionOfUser} from '@/types/storage'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
 
@@ -36,7 +36,7 @@ function getAnswerButtons(lesson: LessonStorage): InlineKeyboardMarkup {
 }
 
 function getNextLesson(sectionID: number, nextPosition: number): InlineKeyboardMarkup {
-  const callbackData = {d: [sectionID, nextPosition], n: QueryName.nextLesson} as QueryData<NextLessonQueryData>
+  const callbackData = {d: [sectionID, nextPosition], n: QueryName.nextLesson} as QueryData<NextLessonData>
   const jsonData = JSON.stringify(callbackData)
   const button: InlineKeyboardButton = {text: INLINE_BUTTONS.nextLesson, callback_data: jsonData}
   return {inline_keyboard: [[button]]}

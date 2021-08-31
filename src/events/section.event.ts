@@ -1,19 +1,19 @@
-import {QueryName} from '@/types/callbackQuery'
-import {getQueryData} from '@/src/events/utils'
+import {getNumberData} from '@/src/events/utils.queryData'
 import {ClientEvent, EventTypes} from '@/types/event'
-import {INLINE_KEYBOARDS} from '@/src/markup'
-import {ANSWER_CB_QUERY, REPLIES} from '@/src/texts'
 import {showLesson} from '@/src/events/utils.context'
+import {ANSWER_CB_QUERY, REPLIES} from '@/src/texts'
+import {QueryName} from '@/types/callbackQuery'
+import {INLINE_KEYBOARDS} from '@/src/markup'
 
 const event: ClientEvent<'callback_query'> = {
   name: QueryName.section,
   type: EventTypes.callbackQuery,
   execute: async (context, storage) => {
-    const data = getQueryData(context.callbackQuery)
+    const sectionID = getNumberData(context.callbackQuery)
     const userID = context.from?.id
-    if (!userID || typeof data?.d !== 'number') return
+    if (!userID || !sectionID) return
 
-    const section = await storage.getSectionOfUserByID(userID, data.d)
+    const section = await storage.getSectionOfUserByID(userID, sectionID)
     if (!section) return
 
     if (!section.available) {

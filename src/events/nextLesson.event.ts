@@ -1,17 +1,17 @@
-import {NextLessonQueryData, QueryName} from '@/types/callbackQuery'
-import {getQueryData} from '@/src/events/utils'
+import {getNextLessonData} from '@/src/events/utils.queryData'
 import {ClientEvent, EventTypes} from '@/types/event'
 import {showLesson} from '@/src/events/utils.context'
+import {QueryName} from '@/types/callbackQuery'
 
 const event: ClientEvent<'callback_query'> = {
   name: QueryName.nextLesson,
   type: EventTypes.callbackQuery,
   execute: async (context, storage) => {
-    const data = getQueryData(context.callbackQuery)
+    const data = getNextLessonData(context.callbackQuery)
     const userID = context.from?.id
-    if (!userID || !data || !Array.isArray(data.d) || typeof data.d[0] !== 'number' || typeof data.d[1] !== 'number') return
+    if (!userID || !data) return
 
-    const [sectionID, lessonPosition] = data.d as NextLessonQueryData
+    const [sectionID, lessonPosition] = data
     const section = await storage.getSectionOfUserByID(userID, sectionID)
     if (!section || !section.available) return
     const lesson = await storage.getLessonOfSectionByPosition(sectionID, lessonPosition)

@@ -1,5 +1,6 @@
 import {ClientEvent, EventExecute, EventTypes} from '@/types/event'
-import {getQueryData, loadEventsFromDirectory} from './utils'
+import {getQueryData} from '@/src/events/utils.queryData'
+import {loadEventsFromDirectory} from './utils.files'
 
 type Events = {
   commands: ClientEvent<'text'>[],
