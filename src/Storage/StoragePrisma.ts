@@ -1,5 +1,5 @@
 import {PrismaClient, Section} from '@prisma/client'
-import {LessonStorage, SectionOfUser, StepOfUser, Storage} from '@/types/storage'
+import {LessonStorage, SectionOfUser, StarsOfSection, StepOfUser, Storage} from '@/types/storage'
 
 export default class StoragePrisma implements Storage{
   private readonly prisma: PrismaClient = new PrismaClient()
@@ -62,6 +62,15 @@ export default class StoragePrisma implements Storage{
       select: {telegramID: true}
     })
   }
+
+  public async updateCompletedSection(userID: number, sectionID: number, completedQuiz?: boolean, stars?: number): Promise<void> {
+    await this.prisma.userCompletedSection.upsert({
+      where: {sectionID_userID: {userID, sectionID}},
+      create: {sectionID, userID, completedQuiz, stars},
+      update: {completedQuiz, stars},
+      select: {userID: true}
+    })
+  }
 }
 
 
@@ -71,24 +80,37 @@ function getStepFromJSON(dataJSON: string): StepOfUser | null {
   return data
 }
 
-type FullSectionInfo = (Section & {users: {userID: number}[], opensAfterSections: {users: {sectionID: number}[]}[]})
+type FullSectionInfo = (Section & {users: {userID: number, stars: number, completedQuiz: boolean}[], opensAfterSections: {users: {sectionID: number}[]}[]})
 type OptionsOfInclude = {
-  opensAfterSections: {select: {users: {select: {sectionID: true}, where: {userID: number}}}},
-  users: {select: {userID: true}, where: {userID: number}}
+  users: {select: {userID: true, stars: true, completedQuiz: true}, where: {userID: number}},
+  opensAfterSections: {select: {users: {select: {sectionID: true}, where: {userID: number, completedQuiz: true}}}}
 }
 
 function getOptionsOfIncludeForSections(userID: number): OptionsOfInclude {
   return {
-    users: {where: {userID}, select: {userID: true}},
-    opensAfterSections: {select: {users: {where: {userID}, select: {sectionID: true}}}}
+    users: {where: {userID}, select: {userID: true, stars: true, completedQuiz: true}},
+    opensAfterSections: {select: {users: {where: {userID, completedQuiz: true}, select: {sectionID: true}}}}
   }
 }
 
 function convertToSectionOfUser(section: FullSectionInfo): SectionOfUser {
-  return {...section, available: checkSectionIsAvailable(section)}
+  return {
+    ...section,
+    available: checkSectionIsAvailable(section),
+    stars: getStarsOfSection(section),
+    availableQuiz: checkAvailableQuiz(section)
+  }
 }
 
 function checkSectionIsAvailable(section: FullSectionInfo): boolean {
   const completedSections = section.opensAfterSections.filter(section => section.users.length > 0)
-  return section.alwaysAvailable || completedSections.length > 0 || section.users.length > 0
+  return section.alwaysAvailable || completedSections.length > 0 || (section.users.length > 0 && section.users[0].completedQuiz)
+}
+
+function getStarsOfSection(section: FullSectionInfo): StarsOfSection {
+  return section.users.length > 0 ? section.users[0].stars as StarsOfSection : 0
+}
+
+function checkAvailableQuiz(section: FullSectionInfo): boolean {
+  return section.users.length > 0
 }

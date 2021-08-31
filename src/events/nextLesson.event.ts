@@ -22,6 +22,7 @@ const event: ClientEvent<'callback_query'> = {
       const [sectionID] = lessonData!
       const section = await storage.getSectionOfUserByID(context.from!.id, sectionID)
       if (!section || !section.parentSectionID) return
+      await storage.updateCompletedSection(context.from!.id, section.id, false)
       await context.editMessageText(
         REPLIES.completedSection(section.textButton),
         {reply_markup: INLINE_KEYBOARDS.startQuiz(section.id, section.parentSectionID, 0)}

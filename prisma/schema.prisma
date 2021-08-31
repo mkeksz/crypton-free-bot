@@ -30,10 +30,12 @@ model Section {
 }
 
 model UserCompletedSection {
-  section   Section @relation(fields: [sectionID], references: [id])
-  sectionID Int
-  user      User    @relation(fields: [userID], references: [telegramID])
-  userID    Int
+  section       Section @relation(fields: [sectionID], references: [id])
+  sectionID     Int
+  user          User    @relation(fields: [userID], references: [telegramID])
+  userID        Int
+  completedQuiz Boolean @default(false)
+  stars         Int     @default(0)
 
   @@id([sectionID, userID])
 }

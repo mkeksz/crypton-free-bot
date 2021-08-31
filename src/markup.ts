@@ -63,7 +63,12 @@ function getNextLesson(sectionID: number, nextPosition: number, isBack = false):
 function getTrainingSections(sections: SectionOfUser[], needBackButton = false): InlineKeyboardMarkup {
   const toButton = (section: SectionOfUser): InlineKeyboardButton[] => {
     const dataJSON = createQueryDataJSON(QueryName.section, section.id)
-    return [{text: `${section.available ? '' : '🔒 '}${section.textButton}`, callback_data: dataJSON}]
+    const button = [{text: `${section.available ? '' : '🔒 '}${section.textButton}`, callback_data: dataJSON}]
+    if (section.availableQuiz) {
+      const dataQuizJSON = createQueryDataJSON<NextLessonOrQuizData>(QueryName.startQuiz, [section.id, 0])
+      button.push({text: 'Quiz', callback_data: dataQuizJSON})
+    }
+    return button
   }
 
   const sortSections = sections.sort((a, b) => a.position - b.position)
