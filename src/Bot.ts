@@ -3,25 +3,34 @@ import StoragePrisma from '@/src/Storage/StoragePrisma'
 import ClientTelegraf from './Client/ClientTelegraf'
 import EventLoader from './events/EventLoader'
 import {Storage} from '@/types/storage'
-import {Client} from '@/types/client'
+import {WebhookCallbackClient} from '@/types/client'
 
 export default class Bot {
-  private readonly client: Client
+  private readonly client: ClientTelegraf
   private readonly storage: Storage
   private readonly eventLoader: EventLoader
+  private readonly webhookURL?: string
 
-  public constructor(tokenBot: string) {
+  public constructor(tokenBot: string, webhookURL?: string) {
     this.client = new ClientTelegraf(tokenBot)
     this.storage = new StoragePrisma()
     this.eventLoader = new EventLoader()
+    this.webhookURL = webhookURL
   }
 
-  public async start(): Promise<void> {
+  public async start(): Promise<boolean> {
     await this.eventLoader.init()
-    await this.client.launch()
     this.startHandlingCommands()
     this.startHandlingTexts()
     this.startHandlingCallbackQuery()
+    if (this.webhookURL) {
+      await this.client.setWebhook(this.webhookURL)
+      return true
+    }
+    else {
+      await this.client.launch()
+      return false
+    }
   }
 
   private startHandlingCommands(): void {
@@ -43,6 +52,10 @@ export default class Bot {
 
   private convertToEventCallback<T extends TypeContext>(execute: EventExecute<T>): EventCallback<T> {
     return (context: EventContext<T>) => execute(context, this.storage)
+  }
+
+  public webhookCallback(path: string): WebhookCallbackClient {
+    return this.client.webhookCallback(path)
   }
 
   public stop(): void {

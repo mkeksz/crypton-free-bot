@@ -1,9 +1,4 @@
-import {EventCallback, EventNames} from '@/types/event'
+import { Update } from 'telegraf/typings/core/types/typegram'
+import * as http from 'http'
 
-export declare class Client {
-  public launch(): Promise<void>
-  public onCommand(commandName: EventNames, callback: EventCallback<'text'>): void
-  public onText(callback: EventCallback<'text'>): void
-  public onCallbackQuery(callback: EventCallback<'callback_query'>): void
-  public stop(): void
-}
+export type WebhookCallbackClient = (req: (http.IncomingMessage & { body?: Update | undefined }), res: http.ServerResponse, next?: () => void) => Promise<void>

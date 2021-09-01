@@ -1,8 +1,8 @@
 import {Telegraf} from 'telegraf'
 import {EventCallback, EventNames} from '@/types/event'
-import {Client} from '@/types/client'
+import {WebhookCallbackClient} from '@/types/client'
 
-export default class ClientTelegraf implements Client {
+export default class ClientTelegraf {
   private readonly telegraf: Telegraf
 
   public constructor(tokenBot: string) {
@@ -23,6 +23,14 @@ export default class ClientTelegraf implements Client {
 
   public onCallbackQuery(callback: EventCallback<'callback_query'>): void {
     this.telegraf.on('callback_query', callback)
+  }
+
+  public async setWebhook(url: string): Promise<void> {
+    await this.telegraf.telegram.setWebhook(url)
+  }
+
+  public webhookCallback(path: string): WebhookCallbackClient {
+    return this.telegraf.webhookCallback(path)
   }
 
   public stop(): void {
