@@ -4,7 +4,7 @@ import ClientTelegraf from './Client/ClientTelegraf'
 import EventLoader from './events/EventLoader'
 import {Storage} from '@/types/storage'
 import {Client} from '@/types/client'
-
+// TODO сейчас database.db попадает в git, это сделано для тестирования на сервере. Обязательно убрать перед подготовкой к продакшн
 export default class Bot {
   private readonly client: Client
   private readonly storage: Storage
