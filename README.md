@@ -33,5 +33,5 @@
 
 `WEBHOOK_URL` - URL адрес с SSL для подключения по webhook (Если пустой, то бот будет работать на long polling)
 
-`PORT_LISTEN_WEBHOOK` - Порт, который будет слушать наш webhook сервер
+`PORT` - Порт, который будет слушать наш webhook сервер (Не требуется, если не указан `WEBHOOK_URL`)
 ***
