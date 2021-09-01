@@ -1,0 +1,12 @@
+node_modules
+.git
+.idea
+.env
+test
+.mocharc.json
+Procfile
+README.md
+.eslintrc.json
+.env.example
+Dockerfile
+dist

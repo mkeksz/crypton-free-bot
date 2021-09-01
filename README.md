@@ -9,6 +9,10 @@
 
 `npm install`
 
+**Генерация клиента для работы с БД**
+
+`npm run prisma-generate`
+
 **Сборка проекта**
 
 `npm run build`

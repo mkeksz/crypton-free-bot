@@ -15,5 +15,5 @@ if (config.WEBHOOK_URL) {
   const webhookURL = new URL(config.WEBHOOK_URL)
   const app = express()
   app.use(bot.webhookCallback(webhookURL.pathname))
-  app.listen(config.PORT, () => console.info(`Webhook is running on ${config.PORT} port!`))
+  app.listen(config.PORT, () => console.info(`Webhook server is running on ${config.PORT} port!`))
 }
