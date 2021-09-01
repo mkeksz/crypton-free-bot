@@ -4,6 +4,7 @@ import {QueryName} from '@/types/callbackQuery'
 import {showQuiz} from '@/src/events/utils.context'
 import {REPLIES} from '@/src/texts'
 import {SectionOfUser, StarsOfSection} from '@/types/storage'
+import {INLINE_KEYBOARDS} from '@/src/markup'
 
 const event: ClientEvent<'callback_query'> = {
   name: QueryName.startQuiz,
@@ -17,7 +18,7 @@ const event: ClientEvent<'callback_query'> = {
       const userID = context.from?.id
       if (!userID) return
       const section = await storage.getSectionOfUserByID(userID, sectionID)
-      if (!section || !section.available) return
+      if (!section || !section.available || !section.parentSectionID) return
 
       const beforeSections = await storage.getSectionsOfUser(userID, false)
 
@@ -28,6 +29,11 @@ const event: ClientEvent<'callback_query'> = {
 
       await context.editMessageText(REPLIES.fullCompleted(numRightAnswers, position, stars))
       await sendNewAvailableSections(context, beforeSections, afterSections)
+
+      const parentSection = await storage.getSectionOfUserByID(userID, section.parentSectionID)
+      if (!parentSection) return
+      const childSections = await storage.getChildSectionsOfUser(userID, parentSection.id)
+      await context.reply(REPLIES.selectedSection(parentSection), {parse_mode: 'MarkdownV2', reply_markup: INLINE_KEYBOARDS.trainingSections(childSections, true)})
       return
     }
     await showQuiz(context, storage, quiz, numRightAnswers)
