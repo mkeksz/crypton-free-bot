@@ -1,2 +1,2 @@
-web: npm run prisma-migrate-deploy
-web: npm run start
+run: npm run prisma-migrate-deploy
+run: npm run start
