@@ -1,9 +1,9 @@
 import {EventCallback, EventContext, EventExecute, TypeContext} from '@/types/event'
 import StoragePrisma from '@/src/Storage/StoragePrisma'
 import ClientTelegraf from './Client/ClientTelegraf'
+import {WebhookCallbackClient} from '@/types/client'
 import EventLoader from './events/EventLoader'
 import {Storage} from '@/types/storage'
-import {WebhookCallbackClient} from '@/types/client'
 
 export default class Bot {
   private readonly client: ClientTelegraf
