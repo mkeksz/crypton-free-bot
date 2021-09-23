@@ -1,0 +1,40 @@
+{
+  "include": [
+    "src/**/*",
+    "src/types/**/*"
+  ],
+  "files": [
+    "index.ts",
+    "start.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts"
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "allowJs": true,
+    "declaration": true,
+    "outDir": "dist",
+    "declarationDir": "dist/typings",
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+//    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
