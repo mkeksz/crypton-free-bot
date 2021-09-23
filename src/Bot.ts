@@ -25,6 +25,7 @@ export default class Bot {
       await this.client.setWebhook(this.webhookURL)
       return true
     } else {
+      await this.client.deleteWebhook()
       await this.client.launch()
       return false
     }

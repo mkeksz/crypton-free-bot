@@ -33,6 +33,10 @@ export default class ClientTelegraf {
     return this.telegraf.webhookCallback(path)
   }
 
+  public async deleteWebhook(): Promise<void> {
+    await this.telegraf.telegram.deleteWebhook()
+  }
+
   public stop(): void {
     this.telegraf.stop()
   }
