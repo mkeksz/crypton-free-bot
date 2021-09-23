@@ -1,9 +1,9 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
+import {createQueryDataJSON} from '@/src/events/utils.queryData'
 import {NextQuizData, QueryName} from '@/types/callbackQuery'
 import {LessonStorage, SectionOfUser} from '@/types/storage'
 import {BUTTONS, INLINE_BUTTONS} from '@/src/texts'
-import {createQueryDataJSON} from '@/src/events/utils.queryData'
 import {getUnixTime} from '@/src/utils'
 
 export const KEYBOARDS = {

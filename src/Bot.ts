@@ -20,17 +20,20 @@ export default class Bot {
 
   public async start(): Promise<boolean> {
     await this.eventLoader.init()
-    this.startHandlingCommands()
-    this.startHandlingTexts()
-    this.startHandlingCallbackQuery()
+    this.startHandlingEvents()
     if (this.webhookURL) {
       await this.client.setWebhook(this.webhookURL)
       return true
-    }
-    else {
+    } else {
       await this.client.launch()
       return false
     }
+  }
+
+  private startHandlingEvents(): void {
+    this.startHandlingCommands()
+    this.startHandlingTexts()
+    this.startHandlingCallbackQuery()
   }
 
   private startHandlingCommands(): void {

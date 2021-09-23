@@ -4,7 +4,7 @@ import express from 'express'
 
 const bot = new Bot(config.TOKEN_BOT, config.WEBHOOK_URL)
 
-bot.start().then((isWebhook) => {
+bot.start().then(isWebhook => {
   console.info('The bot is running!')
   if (isWebhook) console.info('Webhook is launch!')
   process.once('SIGINT', stopProcess)
