@@ -13,15 +13,25 @@
       "nft": "NFT drop Crypton"
     }
   },
+  "inline_keyboards": {
+    "discord": "Перейти в канал"
+  },
   "scenes": {
 
   },
   "shared": {
     "something_went_wrong": "❌ Неизвестная ошибка...\nПопробуй ещё раз.",
-    "main_menu": "Вы в главном меню."
+    "main_menu": "Вы в главном меню.",
+    "unknown_command": "Неизвестная команда!"
   },
   "other": {
     "start": "Добро пожаловать!",
-    "help": "❓ Нажми на иконку в правом нижнем углу чтобы открыть Telegram-клавиатуру и выбери раздел, в который ты хочешь попасть."
+    "help": "❓ Нажми на иконку в правом нижнем углу чтобы открыть Telegram-клавиатуру и выбери раздел, в который ты хочешь попасть.",
+    "discord": "Описание Discord",
+    "ecosystem_html": "Превью текст экосистемы. <a href='https://example.com'>ссылка</a>",
+    "calendar_html": "Бесплатная версия календаря. <a href='https://example.com'>ссылка</a>",
+    "support_html": "Описание услуги поддержки. <a href='https://example.com'>ссылка</a>",
+    "chat_html": "Бесплатный чат криптон. <a href='https://example.com'>ссылка</a>",
+    "nft_html": "Описание NFT drop Crypton."
   }
 }

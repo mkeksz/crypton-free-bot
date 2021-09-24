@@ -6,6 +6,7 @@ import {onlyPrivate} from '@/src/middlewares/onlyPrivate'
 import {loadScenes} from '@/src/util/scenesLoader'
 import {goToMainMenu} from '@/src/util/mainMenu'
 import locales from './locales/ru.json'
+import {getDiscordInlineKeyboard} from '@/src/util/inlineKeyboards'
 
 export default class Bot {
   private telegraf
@@ -21,20 +22,42 @@ export default class Bot {
 
   private async startHandlingEvents(): Promise<void> {
     await this.useMiddlewares()
-    this.telegraf.command('start', async ctx => {
+    this.telegraf.start(async ctx => {
       await ctx.reply(locales.other.start)
-      await goToMainMenu(ctx)
-    })
-    this.telegraf.command('saveme',  async ctx => {
-      ctx.scene.reset()
       await goToMainMenu(ctx)
     })
     this.telegraf.help(async ctx => {
       await ctx.reply(locales.other.help)
       await goToMainMenu(ctx)
     })
+    this.telegraf.command('saveme',  ctx => {
+      ctx.scene.reset()
+      goToMainMenu(ctx)
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.discord, ctx => {
+      ctx.reply(locales.other.discord, getDiscordInlineKeyboard())
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.ecosystem, ctx => {
+      ctx.reply(locales.other.ecosystem_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.calendar, ctx => {
+      ctx.reply(locales.other.calendar_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.support, ctx => {
+      ctx.reply(locales.other.support_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.chat, ctx => {
+      ctx.reply(locales.other.chat_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.nft, ctx => {
+      ctx.reply(locales.other.nft_html, {parse_mode: 'HTML'})
+    })
     this.telegraf.command('test', ctx => {
       ctx.scene.enter('start')
+    })
+    this.telegraf.on('text', async ctx => {
+      await ctx.reply(locales.shared.unknown_command)
+      await goToMainMenu(ctx)
     })
   }
 
