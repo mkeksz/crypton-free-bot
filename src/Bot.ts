@@ -7,6 +7,8 @@ import {loadScenes} from '@/src/util/scenesLoader'
 import {goToMainMenu} from '@/src/util/mainMenu'
 import locales from './locales/ru.json'
 import {getDiscordInlineKeyboard} from '@/src/util/inlineKeyboards'
+import {addStorage} from '@/src/middlewares/addStorage'
+import {updateUserOfStorage} from '@/src/middlewares/updateUserOfStorage'
 
 export default class Bot {
   private telegraf
@@ -69,6 +71,8 @@ export default class Bot {
     this.telegraf.use(stage.middleware())
     this.telegraf.use(errorHandler())
     this.telegraf.use(onlyPrivate())
+    this.telegraf.use(addStorage())
+    this.telegraf.use(updateUserOfStorage())
   }
 
   private async launch(webhookURL?: string): Promise<void> {

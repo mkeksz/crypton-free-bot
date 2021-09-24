@@ -11,8 +11,4 @@ start.enter(async ctx  => {
 //   await ctx.reply('Покинуто главное меню')
 // })
 
-// start.hears('test', async ctx => {
-//   ctx.scene.leave()
-// })
-
 export default start
