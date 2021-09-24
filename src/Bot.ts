@@ -1,13 +1,14 @@
 import LocalSession from 'telegraf-session-local'
 import {Scenes, Telegraf} from 'telegraf'
-import {WebhookCallback} from '@/src/types/telegraf'
+import {BotContext, WebhookCallback} from '@/src/types/telegraf'
 import {loadScenes} from '@/src/util/scenesLoader'
+import {errorHandler} from '@/src/middlewares/errorHandler'
 
 export default class Bot {
   private telegraf
 
   public constructor(tokenBot: string) {
-    this.telegraf = new Telegraf<Scenes.SceneContext>(tokenBot)
+    this.telegraf = new Telegraf<BotContext>(tokenBot)
   }
 
   public async launch(webhookURL?: string): Promise<void> {
@@ -23,9 +24,19 @@ export default class Bot {
   private async startHandlingEvents(): Promise<void> {
     const scenes = await loadScenes()
     const stage = new Scenes.Stage(scenes)
-    this.telegraf.use((new LocalSession({database: 'sessions_db.json'})).middleware())
+    const localSession = new LocalSession({database: 'sessions_db.json'})
+
+    this.telegraf.use(localSession.middleware())
     this.telegraf.use(stage.middleware())
-    this.telegraf.command('start', ctx => ctx.scene.enter('start'))
+    this.telegraf.use(errorHandler())
+    this.telegraf.command('start', async ctx => {
+      await ctx.scene.enter('start')
+    })
+    this.telegraf.command('saveme', async ctx => {
+      await ctx.scene.reset()
+      // TODO возврат в главное меню
+      await ctx.reply('Сброс')
+    })
   }
 
   public webhookCallback(path: string): WebhookCallback {
