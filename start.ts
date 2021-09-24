@@ -4,7 +4,7 @@ import express from 'express'
 
 const bot = new Bot(config.TOKEN_BOT)
 
-bot.launch(config.WEBHOOK_URL).then(() => console.info('The bot is running!'))
+bot.start(config.WEBHOOK_URL).then(() => console.info('The bot is running!'))
 
 if (config.WEBHOOK_URL) {
   const webhookURL = new URL(config.WEBHOOK_URL)
