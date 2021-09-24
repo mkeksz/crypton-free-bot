@@ -1,0 +1,16 @@
+{
+  "keyboards": {
+    "back_keyboard": {
+      "back": "◀️ Назад"
+    },
+    "main_keyboard": {
+      "training": "Обучение криптовалюте",
+      "discord": "Discord",
+      "ecosystem": "Экосистема Crypton",
+      "calendar": "Календарь событий LITE",
+      "support": "Поддержка LITE",
+      "chat": "Бесплатный чат Crypton",
+      "nft": "NFT drop Crypton"
+    }
+  }
+}

@@ -29,6 +29,7 @@
     "noFallthroughCasesInSwitch": true,
 //    "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
     "declarationMap": true,

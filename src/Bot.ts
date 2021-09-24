@@ -3,6 +3,7 @@ import {Scenes, Telegraf} from 'telegraf'
 import {BotContext, WebhookCallback} from '@/src/types/telegraf'
 import {loadScenes} from '@/src/util/scenesLoader'
 import {errorHandler} from '@/src/middlewares/errorHandler'
+import {getMainKeyboard} from '@/src/util/keyboards'
 
 export default class Bot {
   private telegraf
@@ -29,13 +30,19 @@ export default class Bot {
     this.telegraf.use(localSession.middleware())
     this.telegraf.use(stage.middleware())
     this.telegraf.use(errorHandler())
-    this.telegraf.command('start', async ctx => {
-      await ctx.scene.enter('start')
+    // TODO middleware на фильтр групповых чатов, каналов и т.д. Только личные сообщения от людей.
+    this.telegraf.command('start', ctx => {
+      ctx.reply('Главное меню', getMainKeyboard())
+      // ctx.scene.enter('start')
     })
-    this.telegraf.command('saveme', async ctx => {
-      await ctx.scene.reset()
+    this.telegraf.help(async ctx => {
+      ctx.reply('❓ Нажми на иконку в правом нижнем углу чтобы открыть Telegram-клавиатуру и выбери раздел, в который ты хочешь попасть.')
       // TODO возврат в главное меню
-      await ctx.reply('Сброс')
+    })
+    this.telegraf.command('saveme',  ctx => {
+      ctx.scene.reset()
+      // TODO возврат в главное меню
+      ctx.reply('Сброс')
     })
   }
 
