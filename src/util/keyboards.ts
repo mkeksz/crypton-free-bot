@@ -12,3 +12,9 @@ export function getMainKeyboard(): Markup.Markup<ReplyKeyboardMarkup> {
   ])
   return keyboard.resize()
 }
+
+export function getBackKeyboard(): Markup.Markup<ReplyKeyboardMarkup> {
+  const backKeyboard = locales.keyboards.back_keyboard
+  const keyboard = Markup.keyboard([[backKeyboard.back]])
+  return keyboard.resize()
+}

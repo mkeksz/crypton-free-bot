@@ -17,7 +17,9 @@
     "discord": "Перейти в канал"
   },
   "scenes": {
-
+    "training_sections": {
+      "sections": "Выберите раздел обучения"
+    }
   },
   "shared": {
     "something_went_wrong": "❌ Неизвестная ошибка...\nПопробуй ещё раз.",
