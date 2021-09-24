@@ -37,12 +37,12 @@
     "tsconfig-paths": "^3.11.0"
   },
   "dependencies": {
-    "@prisma/client": "^2.30.3",
+    "@prisma/client": "^3.1.1",
     "@types/express": "^4.17.13",
     "@types/node": "^16.7.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "prisma": "^2.30.2",
+    "prisma": "^3.1.1",
     "rimraf": "^3.0.2",
     "telegraf": "^4.4.1",
     "telegraf-session-local": "^2.1.0",
