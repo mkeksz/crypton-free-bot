@@ -1,7 +1,6 @@
 import LocalSession from 'telegraf-session-local'
 import {Scenes, Telegraf} from 'telegraf'
 import {BotContext, WebhookCallback} from '@/src/types/telegraf'
-import {errorHandler} from '@/src/middlewares/errorHandler'
 import {onlyPrivate} from '@/src/middlewares/onlyPrivate'
 import {loadScenes} from '@/src/util/scenesLoader'
 import {goToMainMenu} from '@/src/util/mainMenu'
@@ -65,6 +64,10 @@ export default class Bot {
     this.telegraf.action(/^.*/, ctx => {
       ctx.answerCbQuery(locales.shared.old_button, {show_alert: true})
     })
+    this.telegraf.catch((error, ctx) => {
+      console.error(ctx, error)
+      ctx.reply(locales.shared.something_went_wrong)
+    })
   }
 
   private async useMiddlewares(): Promise<void> {
@@ -73,7 +76,6 @@ export default class Bot {
     const scenes = await loadScenes()
     const stage = new Scenes.Stage(scenes)
     this.telegraf.use(stage.middleware())
-    this.telegraf.use(errorHandler())
     this.telegraf.use(onlyPrivate())
     const storage = new Storage()
     this.telegraf.use(addStorageToContext(storage))
