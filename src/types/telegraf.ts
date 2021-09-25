@@ -8,7 +8,5 @@ export type WebhookCallback = (req: (http.IncomingMessage & { body?: Update | un
 export type Scene = BaseScene<SceneContext>
 
 export interface BotContext extends SceneContext {
-  state: {
-    storage?: Storage
-  }
+  storage: Storage
 }

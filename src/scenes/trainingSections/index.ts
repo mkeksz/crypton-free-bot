@@ -8,7 +8,7 @@ import locales from '@/src/locales/ru.json'
 const trainingSections = new Scenes.BaseScene<BotContext>('trainingSections')
 
 trainingSections.enter(async ctx => {
-  const sections = await ctx.state.storage!.getSectionsOfUser(ctx.from!.id, true)
+  const sections = await ctx.storage!.getSectionsOfUser(ctx.from!.id, true)
   const replyMarkup = getTrainingSectionsInlineKeyboard(sections).reply_markup
   await ctx.reply(locales.scenes.training_sections.sections, {parse_mode: 'HTML', reply_markup: replyMarkup})
 })

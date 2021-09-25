@@ -7,7 +7,7 @@ import {loadScenes} from '@/src/util/scenesLoader'
 import {goToMainMenu} from '@/src/util/mainMenu'
 import locales from './locales/ru.json'
 import {getDiscordInlineKeyboard} from '@/src/util/inlineKeyboards'
-import {addStorage} from '@/src/middlewares/addStorage'
+import {addStorageToContext} from '@/src/middlewares/addStorageToContext'
 import {updateUserOfStorage} from '@/src/middlewares/updateUserOfStorage'
 import Storage from '@/src/Storage/Storage'
 
@@ -76,7 +76,7 @@ export default class Bot {
     this.telegraf.use(errorHandler())
     this.telegraf.use(onlyPrivate())
     const storage = new Storage()
-    this.telegraf.use(addStorage(storage))
+    this.telegraf.use(addStorageToContext(storage))
     this.telegraf.use(updateUserOfStorage())
   }
 
