@@ -9,6 +9,7 @@ import {getDiscordInlineKeyboard} from '@/src/util/inlineKeyboards'
 import {addStorageToContext} from '@/src/middlewares/addStorageToContext'
 import {updateUserOfStorage} from '@/src/middlewares/updateUserOfStorage'
 import Storage from '@/src/Storage/Storage'
+import {showAlertOldButton} from '@/src/util/alerts'
 
 export default class Bot {
   private telegraf
@@ -61,9 +62,7 @@ export default class Bot {
       await ctx.reply(locales.shared.unknown_command)
       await goToMainMenu(ctx)
     })
-    this.telegraf.action(/^.*/, ctx => {
-      ctx.answerCbQuery(locales.shared.old_button, {show_alert: true})
-    })
+    this.telegraf.action(/^.*/, showAlertOldButton)
     this.telegraf.catch((error, ctx) => {
       console.error(ctx, error)
       ctx.reply(locales.shared.something_went_wrong)
