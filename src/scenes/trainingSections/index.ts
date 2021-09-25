@@ -1,7 +1,6 @@
 import {Scenes} from 'telegraf'
 import {getParentSections, getTrainingSectionsInlineKeyboard, getTrainingSubsectionsInlineKeyboard} from './helpers'
 import {checkAndAddSectionToState} from './middlewares'
-import {showAlertOldButton} from '@/src/util/alerts'
 import {SectionOfUser} from '@/src/types/storage'
 import {goToMainMenu} from '@/src/util/mainMenu'
 import {BotContext} from '@/src/types/telegraf'
@@ -24,8 +23,6 @@ trainingSections.action(/^sid:[0-9]+$/, checkAndAddSectionToState(false), async 
 
 trainingSections.action(/^ssid:[0-9]+$/, checkAndAddSectionToState(true), async ctx => {
   const section = ctx.state['section'] as SectionOfUser
-  const lesson = await ctx.storage.getLessonOfSectionByPosition(section.id, 0)
-  if (!lesson) return showAlertOldButton(ctx)
   return ctx.scene.enter('lessons', {sectionID: section.id})
 })
 
