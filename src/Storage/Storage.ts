@@ -2,7 +2,7 @@ import {PrismaClient} from '@prisma/client'
 import {convertToSectionOfUser, getOptionsOfIncludeForSections} from './helpers'
 import {LessonStorage, QuizStorage, SectionOfUser} from '../types/storage'
 
-// TODO Сделать рефакторинг Storage (не забыть про src/types/storage.ts). Сейчас код очень запутанный.
+// TODO Сделать рефакторинг Storage (не забыть про src/types/storage.ts). Сейчас код очень запутанный. Возможно также потребуется изменить модели в schema.prisma.
 export default class Storage {
   private readonly prisma = new PrismaClient()
 

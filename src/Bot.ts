@@ -9,6 +9,7 @@ import locales from './locales/ru.json'
 import {getDiscordInlineKeyboard} from '@/src/util/inlineKeyboards'
 import {addStorage} from '@/src/middlewares/addStorage'
 import {updateUserOfStorage} from '@/src/middlewares/updateUserOfStorage'
+import Storage from '@/src/Storage/Storage'
 
 export default class Bot {
   private telegraf
@@ -54,24 +55,28 @@ export default class Bot {
     this.telegraf.hears(locales.keyboards.main_keyboard.nft, ctx => {
       ctx.reply(locales.other.nft_html, {parse_mode: 'HTML'})
     })
-    this.telegraf.command('test', ctx => {
-      ctx.scene.enter('start')
+    this.telegraf.hears(locales.keyboards.main_keyboard.training, ctx => {
+      ctx.scene.enter('trainingSections')
     })
     this.telegraf.on('text', async ctx => {
       await ctx.reply(locales.shared.unknown_command)
       await goToMainMenu(ctx)
     })
+    this.telegraf.action(/^.*/, ctx => {
+      ctx.answerCbQuery(locales.shared.old_button, {show_alert: true})
+    })
   }
 
   private async useMiddlewares(): Promise<void> {
-    const scenes = await loadScenes()
-    const stage = new Scenes.Stage(scenes)
     const localSession = new LocalSession({database: 'sessions_db.json'})
     this.telegraf.use(localSession.middleware())
+    const scenes = await loadScenes()
+    const stage = new Scenes.Stage(scenes)
     this.telegraf.use(stage.middleware())
     this.telegraf.use(errorHandler())
     this.telegraf.use(onlyPrivate())
-    this.telegraf.use(addStorage())
+    const storage = new Storage()
+    this.telegraf.use(addStorage(storage))
     this.telegraf.use(updateUserOfStorage())
   }
 
