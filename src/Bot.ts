@@ -71,15 +71,15 @@ export default class Bot {
   }
 
   private async useMiddlewares(): Promise<void> {
+    this.telegraf.use(onlyPrivate())
+    const storage = new Storage()
+    this.telegraf.use(addStorageToContext(storage))
+    this.telegraf.use(updateUserOfStorage())
     const localSession = new LocalSession({database: 'sessions_db.json'})
     this.telegraf.use(localSession.middleware())
     const scenes = await loadScenes()
     const stage = new Scenes.Stage(scenes)
     this.telegraf.use(stage.middleware())
-    this.telegraf.use(onlyPrivate())
-    const storage = new Storage()
-    this.telegraf.use(addStorageToContext(storage))
-    this.telegraf.use(updateUserOfStorage())
   }
 
   private async launch(webhookURL?: string): Promise<void> {
