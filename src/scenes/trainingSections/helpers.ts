@@ -33,3 +33,8 @@ export function getSectionFromActionData(ctx: ActionContext): Promise<SectionOfU
   const [,sectionID] = data.split(':')
   return ctx.storage.getSectionOfUserByID(ctx.from!.id, Number(sectionID))
 }
+
+export function getEditFromState(ctx: BotContext): boolean {
+  const edit = ctx.state['edit'] as unknown
+  return Boolean(edit)
+}

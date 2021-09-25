@@ -1,5 +1,5 @@
 import {Scenes} from 'telegraf'
-import {getParentSections, getTrainingSectionsInlineKeyboard, getTrainingSubsectionsInlineKeyboard} from './helpers'
+import {getEditFromState, getParentSections, getTrainingSectionsInlineKeyboard, getTrainingSubsectionsInlineKeyboard} from './helpers'
 import {checkAndAddSectionToState} from './middlewares'
 import {SectionOfUser} from '@/src/types/storage'
 import {goToMainMenu} from '@/src/util/mainMenu'
@@ -11,7 +11,11 @@ const trainingSections = new Scenes.BaseScene<BotContext>('trainingSections')
 trainingSections.enter(async ctx => {
   const sections = await getParentSections(ctx)
   const inlineKeyboard = getTrainingSectionsInlineKeyboard(sections)
-  await ctx.reply(locales.scenes.training_sections.sections, inlineKeyboard)
+  const text = locales.scenes.training_sections.sections
+
+  const edit = getEditFromState(ctx)
+  if (edit) return ctx.editMessageText(text, inlineKeyboard)
+  return ctx.reply(text, inlineKeyboard)
 })
 
 trainingSections.action(/^sid:[0-9]+$/, checkAndAddSectionToState(false), async ctx => {
