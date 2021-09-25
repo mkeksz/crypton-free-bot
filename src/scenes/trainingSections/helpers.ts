@@ -13,7 +13,9 @@ export function getTrainingSectionsInlineKeyboard(sections: SectionOfUser[]): Ma
 }
 
 export function getTrainingSubsectionsInlineKeyboard(subsections: SectionOfUser[]): Markup.Markup<InlineKeyboardMarkup> {
-  const buttons: InlineKeyboardButton[][] = subsections.map(subsection => [{text: subsection.textButton, callback_data: `ssid:${subsection.id}`}])
+  const buttons: InlineKeyboardButton[][] = subsections.map(subsection => {
+    return [{text: `${subsection.available ? '' : '🔒'} ${subsection.textButton}`, callback_data: `ssid:${subsection.id}`}]
+  })
   buttons.push([{text: locales.inline_keyboards.back, callback_data: 'ss:back'}])
   return Markup.inlineKeyboard(buttons)
 }
