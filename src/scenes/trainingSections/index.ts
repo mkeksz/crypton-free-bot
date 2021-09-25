@@ -1,6 +1,6 @@
 import {Scenes} from 'telegraf'
-import {getTrainingSectionsInlineKeyboard} from '@/src/util/inlineKeyboards'
 import {getCallbackQueryData} from '@/src/util/callbackQuery'
+import {getTrainingSectionsInlineKeyboard} from './helpers'
 import {goToMainMenu} from '@/src/util/mainMenu'
 import {BotContext} from '@/src/types/telegraf'
 import locales from '@/src/locales/ru.json'
