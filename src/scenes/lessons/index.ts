@@ -1,6 +1,7 @@
 import {Scenes, Telegraf} from 'telegraf'
 import {getEndLessonsInlineKeyboard, getNextLessonInlineKeyboard, getQuizSectionInlineKeyboard, showLesson} from './helpers'
-import {checkAndAddLessonToState, checkAndAddSectionToState, hasRightAnswer, checkTime,} from './middlewares'
+import {checkAndAddSectionToState} from '@/src/middlewares/shared/checkAndAddSectionToState'
+import {checkAndAddLessonToState, hasRightAnswer, checkTime,} from './middlewares'
 import {SectionOfUser} from '@/src/types/storage'
 import {BotContext} from '@/src/types/telegraf'
 import {getUnixTime} from '@/src/util/common'

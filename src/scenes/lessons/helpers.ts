@@ -59,12 +59,6 @@ export function getQuizSectionInlineKeyboard(sectionID: number): Markup.Markup<I
   return Markup.inlineKeyboard([[buttonStart], [buttonLater]])
 }
 
-export function getSectionIDFromActionData(ctx: ActionContext): number {
-  const data = ctx.match[0]
-  const [,sectionID] = data.split(':')
-  return Number(sectionID)
-}
-
 export function getLessonPositionFromActionData(ctx: ActionContext): number {
   const data = ctx.match[0]
   const [,,lessonPosition] = data.split(':')

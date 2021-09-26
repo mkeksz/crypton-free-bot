@@ -45,12 +45,6 @@ export function showAlertLockedSection(ctx: BotContext): Promise<true> {
   return ctx.answerCbQuery(locales.scenes.training_sections.locked_section)
 }
 
-export function getSectionFromActionData(ctx: ActionContext): Promise<SectionOfUser | null> {
-  const data = ctx.match[0]
-  const [,sectionID] = data.split(':')
-  return ctx.storage.getSectionOfUserByID(ctx.from!.id, Number(sectionID))
-}
-
 export function getEditFromState(ctx: BotContext): boolean {
   const edit = ctx.state['edit'] as unknown
   return Boolean(edit)
