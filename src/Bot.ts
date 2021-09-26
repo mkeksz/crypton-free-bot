@@ -1,15 +1,16 @@
 import LocalSession from 'telegraf-session-local'
 import {Scenes, Telegraf} from 'telegraf'
-import {BotContext, WebhookCallback} from '@/src/types/telegraf'
-import {onlyPrivate} from '@/src/middlewares/onlyPrivate'
-import {loadScenes} from '@/src/util/scenesLoader'
-import {goToMainMenu} from '@/src/util/mainMenu'
+import {addStorageToContext} from './middlewares/addStorageToContext'
+import {updateUserOfStorage} from './middlewares/updateUserOfStorage'
+import {getDiscordInlineKeyboard} from './util/inlineKeyboards'
+import {BotContext, WebhookCallback} from './types/telegraf'
+import {onlyPrivate} from './middlewares/onlyPrivate'
+import {goToMainMenu, saveMe} from './util/mainMenu'
+import {showAlertOldButton} from './util/alerts'
+import {loadScenes} from './util/scenesLoader'
+import Storage from './Storage/Storage'
 import locales from './locales/ru.json'
-import {getDiscordInlineKeyboard} from '@/src/util/inlineKeyboards'
-import {addStorageToContext} from '@/src/middlewares/addStorageToContext'
-import {updateUserOfStorage} from '@/src/middlewares/updateUserOfStorage'
-import Storage from '@/src/Storage/Storage'
-import {showAlertOldButton} from '@/src/util/alerts'
+
 
 export default class Bot {
   private telegraf
@@ -33,10 +34,7 @@ export default class Bot {
       await ctx.reply(locales.other.help)
       await goToMainMenu(ctx)
     })
-    this.telegraf.command('saveme',  ctx => {
-      ctx.scene.reset()
-      goToMainMenu(ctx)
-    })
+    this.telegraf.command('saveme', saveMe)
     this.telegraf.hears(locales.keyboards.main_keyboard.discord, ctx => {
       ctx.reply(locales.other.discord, getDiscordInlineKeyboard())
     })

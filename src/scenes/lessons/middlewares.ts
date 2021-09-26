@@ -2,6 +2,7 @@ import {ActionContext, BotContext} from '@/src/types/telegraf'
 import {Middleware} from 'telegraf'
 import {getLessonPositionFromActionData, getSectionIDFromActionData, getSectionIDFromSceneState, getWaitSeconds} from './helpers'
 import {showAlertOldButton} from '@/src/util/alerts'
+import {Predicate} from 'telegraf/typings/composer'
 import {SectionOfUser} from '@/src/types/storage'
 import locales from '@/src/locales/ru.json'
 
@@ -42,5 +43,12 @@ export function checkTime(): Middleware<ActionContext> {
     const state = ctx.scene.state as {time?: number}
     state.time = undefined
     return next()
+  }
+}
+
+export function hasRightAnswer(): Predicate<BotContext> {
+  return ctx => {
+    const state = ctx.scene.state as {rightAnswer?: string, editMessageID?: number, lessonPosition?: number, sectionID?: number}
+    return !!(state.rightAnswer && state.editMessageID !== undefined && state.lessonPosition !== undefined && state.sectionID !== undefined)
   }
 }

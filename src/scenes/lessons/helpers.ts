@@ -12,25 +12,25 @@ export function getSectionIDFromSceneState(ctx: BotContext): number | undefined 
   return state.sectionID
 }
 
-export async function showLesson(ctx: BotContext): Promise<void> {
+export async function showLesson(ctx: BotContext | ActionContext): Promise<void> {
   const lesson = ctx.state['lesson'] as LessonStorage
   const media = lesson.media ? `<a href="${lesson.media}">  </a>` : ''
   const textHTML = media + lesson.text
 
-  // TODO добавить сцены для обработки ответа на вопрос текстом и кнопками
-  // if (lesson.answer) {
-  //   buttons = undefined
-  //   const messageID = context.callbackQuery.message?.message_id
-  //   const userID = context.from?.id
-  //   if (!userID || !messageID) return
-  //   await storage.setStepUser(userID, {lessonID: lesson.id, messageID, name: StepName.waitAnswerLesson})
-  // }
   const section = ctx.state['section'] as SectionOfUser
   const isLastLesson = ctx.state['isLastLesson'] as boolean
 
-  let replyMarkup = getNextLessonInlineKeyboard(section.id, lesson.position + 1).reply_markup
+  let replyMarkup: InlineKeyboardMarkup | undefined = getNextLessonInlineKeyboard(section.id, lesson.position + 1).reply_markup
   if (isLastLesson) replyMarkup = getEndLessonsInlineKeyboard(section.id).reply_markup
   if (lesson.answerButtons) replyMarkup = getAnswersInlineKeyboard(lesson, isLastLesson).reply_markup
+  if (lesson.answer) {
+    replyMarkup = undefined
+    const state = ctx.scene.state as {rightAnswer?: string, editMessageID?: number, lessonPosition?: number, isLastLesson?: boolean}
+    state.rightAnswer = lesson.answer
+    state.editMessageID = ctx.callbackQuery!.message!.message_id
+    state.lessonPosition = lesson.position
+    state.isLastLesson = isLastLesson
+  }
 
   await ctx.editMessageText(textHTML, {parse_mode: 'HTML', reply_markup: replyMarkup})
 }
@@ -47,9 +47,9 @@ export function getAnswersInlineKeyboard(lesson: LessonStorage, isLastLesson: bo
   return Markup.inlineKeyboard(buttons)
 }
 
-export function getNextLessonInlineKeyboard(sectionID: number, lessonPosition: number): Markup.Markup<InlineKeyboardMarkup> {
+export function getNextLessonInlineKeyboard(sectionID: number, lessonPosition: number, isBack = false): Markup.Markup<InlineKeyboardMarkup> {
   const button: InlineKeyboardButton = {
-    text: locales.scenes.lessons.next_lesson,
+    text: isBack ? locales.inline_keyboards.back : locales.scenes.lessons.next_lesson,
     callback_data: `nl:${sectionID}:${lessonPosition}`
   }
   return Markup.inlineKeyboard([button])
