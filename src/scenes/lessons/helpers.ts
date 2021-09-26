@@ -5,13 +5,6 @@ import {ActionContext, BotContext} from '@/src/types/telegraf'
 import {getUnixTime} from '@/src/util/common'
 import locales from '@/src/locales/ru.json'
 
-export function getSectionIDFromSceneState(ctx: BotContext): number | undefined {
-  const state = ctx.scene.state as {sectionID: number}
-  const sectionID = Number(state.sectionID)
-  if (isNaN(sectionID)) return undefined
-  return state.sectionID
-}
-
 export async function showLesson(ctx: BotContext | ActionContext): Promise<void> {
   const lesson = ctx.state['lesson'] as LessonStorage
   const media = lesson.media ? `<a href="${lesson.media}">  </a>` : ''

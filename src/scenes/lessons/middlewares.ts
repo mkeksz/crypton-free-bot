@@ -1,6 +1,7 @@
 import {ActionContext, BotContext} from '@/src/types/telegraf'
 import {Middleware} from 'telegraf'
-import {getLessonPositionFromActionData, getSectionIDFromActionData, getSectionIDFromSceneState, getWaitSeconds} from './helpers'
+import {getLessonPositionFromActionData, getSectionIDFromActionData, getWaitSeconds} from './helpers'
+import {getSectionIDFromSceneState} from '@/src/util/scenes'
 import {showAlertOldButton} from '@/src/util/alerts'
 import {Predicate} from 'telegraf/typings/composer'
 import {SectionOfUser} from '@/src/types/storage'
