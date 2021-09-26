@@ -7,3 +7,4 @@ README.md
 .env.example
 Dockerfile
 dist
+sessions_db.json
