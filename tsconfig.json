@@ -16,9 +16,10 @@
     "target": "ESNext",
     "module": "CommonJS",
     "allowJs": true,
-    "declaration": true,
+    "declaration": false,
+    "declarationMap": false,
+//    "declarationDir": "dist/typings",
     "outDir": "dist",
-    "declarationDir": "dist/typings",
     "removeComments": true,
     "strict": true,
     "noImplicitAny": true,
@@ -31,7 +32,6 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
-    "declarationMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
