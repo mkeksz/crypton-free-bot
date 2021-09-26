@@ -8,5 +8,6 @@ export interface SectionOfUser extends Section {
   available: boolean,
   stars: StarsOfSection,
   availableQuiz: boolean,
+  hasQuizzes: boolean
   fullCompleted: boolean
 }
