@@ -1,4 +1,5 @@
-import LocalSession from 'telegraf-session-local'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const LocalSession = require('telegraf-session-local')
 import {Scenes, Telegraf} from 'telegraf'
 import {addStorageToContext} from './middlewares/addStorageToContext'
 import {updateUserOfStorage} from './middlewares/updateUserOfStorage'
