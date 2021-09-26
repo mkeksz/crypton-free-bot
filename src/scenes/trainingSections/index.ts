@@ -1,5 +1,5 @@
 import {Scenes} from 'telegraf'
-import {getEditFromState, getParentSections, getTrainingSectionsInlineKeyboard, getTrainingSubsectionsInlineKeyboard} from './helpers'
+import {getEditFromState, getParentSections, getStarsFromActionData, getTrainingSectionsInlineKeyboard, getTrainingSubsectionsInlineKeyboard} from './helpers'
 import {checkAndAddSectionToState} from './middlewares'
 import {SectionOfUser} from '@/src/types/storage'
 import {goToMainMenu} from '@/src/util/mainMenu'
@@ -39,6 +39,16 @@ trainingSections.action('ss:back',  async ctx => {
   const sections = await getParentSections(ctx)
   const inlineKeyboard = getTrainingSectionsInlineKeyboard(sections)
   await ctx.editMessageText(locales.scenes.training_sections.sections, inlineKeyboard)
+})
+
+trainingSections.action(/^qsss:[0-9]+$/, ctx => {
+  const stars = getStarsFromActionData(ctx)
+  ctx.answerCbQuery(locales.scenes.training_sections.stars_quiz.replace('%stars%', stars))
+})
+
+trainingSections.action(/^qssid:[0-9]+$/, checkAndAddSectionToState(true), async ctx => {
+  const section = ctx.state['section'] as SectionOfUser
+  ctx.scene.enter('quizzes', {sectionID: section.id})
 })
 
 export default trainingSections
