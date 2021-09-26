@@ -1,7 +1,8 @@
 import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/types/typegram'
 import {Markup} from 'telegraf'
 import {ActionContext, BotContext} from '@/src/types/telegraf'
-import {QuizStorage} from '@/src/types/storage'
+import {QuizStorage, SectionOfUser} from '@/src/types/storage'
+import locales from '@/src/locales/ru.json'
 
 export async function showQuiz(ctx: BotContext | ActionContext): Promise<void> {
   const quiz = ctx.state['quiz'] as QuizStorage
@@ -20,6 +21,19 @@ function getAnswersQuizInlineKeyboard(quiz: QuizStorage, rightAnswers: number, i
     return [{text: answer[0], callback_data: callbackData}]
   })
   return Markup.inlineKeyboard(buttons)
+}
+
+export async function sendNewAvailableSections(ctx: BotContext, beforeSections: SectionOfUser[], afterSections: SectionOfUser[]): Promise<void> {
+  const newSections: SectionOfUser[] = []
+  for (const section of beforeSections) {
+    const afterSection = afterSections.find(afterSection => afterSection.id === section.id)
+    if (!afterSection) continue
+    if (section.available !== afterSection.available && afterSection.available) newSections.push(section)
+  }
+  if (newSections.length === 0) return
+  const sectionNames = newSections.map(section => section.textButton)
+  const text = locales.scenes.quizzes.new_sections.replace('%sections%', sectionNames.join('\n'))
+  await ctx.reply(text)
 }
 
 export function getQuizPositionFromActionData(ctx: ActionContext): number {

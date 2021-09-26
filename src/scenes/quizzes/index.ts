@@ -1,9 +1,10 @@
 import {Scenes} from 'telegraf'
+import {getRightAnswersFromActionData, countStars, showQuiz, sendNewAvailableSections} from './helpers'
 import {checkAndAddSectionToState} from '@/src/middlewares/shared/checkAndAddSectionToState'
-import {BotContext} from '@/src/types/telegraf'
-import {checkAndAddQuizToState} from '@/src/scenes/quizzes/middlewares'
-import {getRightAnswersFromActionData, countStars, showQuiz} from '@/src/scenes/quizzes/helpers'
+import {checkAndAddQuizToState} from './middlewares'
 import {SectionOfUser} from '@/src/types/storage'
+import {BotContext} from '@/src/types/telegraf'
+import locales from '@/src/locales/ru.json'
 
 const quizzes = new Scenes.BaseScene<BotContext>('quizzes')
 
@@ -16,8 +17,16 @@ quizzes.action(/^eq:[0-9]+::[0-9]+$/, checkAndAddSectionToState(true), async ctx
   const section = ctx.state['section'] as SectionOfUser
   const numQuizzes = section.quizzes.length
   const stars = countStars(rightAnswers, numQuizzes)
-  await ctx.storage.updateCompletedSection(ctx.from!.id, section.id, true, stars > section.stars ? stars : undefined)
-  ctx.editMessageText(`Quiz пройден!\n${rightAnswers} верных ответов из ${numQuizzes}.\nПолучено звёзд: ${stars}`)
+  const userID = ctx.from!.id
+  const beforeSections = await ctx.storage.getSectionsOfUser(userID, false)
+  await ctx.storage.updateCompletedSection(userID, section.id, true, stars > section.stars ? stars : undefined)
+  const afterSections = await ctx.storage.getSectionsOfUser(userID, false)
+  const text = locales.scenes.quizzes.quiz_complete
+    .replace('%answers%', String(rightAnswers))
+    .replace('%quizzes%', String(numQuizzes))
+    .replace('%stars%', String(stars))
+  ctx.editMessageText(text)
+  await sendNewAvailableSections(ctx, beforeSections, afterSections)
   ctx.scene.enter('trainingSections')
 })
 
