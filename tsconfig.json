@@ -1,10 +1,9 @@
 {
   "include": [
     "src/**/*",
-    "types/**/*"
+    "src/types/**/*"
   ],
   "files": [
-    "index.ts",
     "start.ts"
   ],
   "exclude": [
@@ -17,9 +16,10 @@
     "target": "ESNext",
     "module": "CommonJS",
     "allowJs": true,
-    "declaration": true,
+    "declaration": false,
+    "declarationMap": false,
+//    "declarationDir": "dist/typings",
     "outDir": "dist",
-    "declarationDir": "dist/typings",
     "removeComments": true,
     "strict": true,
     "noImplicitAny": true,
@@ -29,9 +29,9 @@
     "noFallthroughCasesInSwitch": true,
 //    "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
-    "declarationMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]

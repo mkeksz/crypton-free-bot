@@ -1,68 +1,98 @@
-import {EventCallback, EventContext, EventExecute, TypeContext} from '@/types/event'
-import StoragePrisma from '@/src/Storage/StoragePrisma'
-import ClientTelegraf from './Client/ClientTelegraf'
-import {WebhookCallbackClient} from '@/types/client'
-import EventLoader from './events/EventLoader'
-import {Storage} from '@/types/storage'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const LocalSession = require('telegraf-session-local')
+import {Scenes, Telegraf} from 'telegraf'
+import {addStorageToContext} from './middlewares/addStorageToContext'
+import {updateUserOfStorage} from './middlewares/updateUserOfStorage'
+import {getDiscordInlineKeyboard} from './util/inlineKeyboards'
+import {BotContext, WebhookCallback} from './types/telegraf'
+import {onlyPrivate} from './middlewares/onlyPrivate'
+import {goToMainMenu, saveMe} from './util/mainMenu'
+import {showAlertOldButton} from './util/alerts'
+import {loadScenes} from './util/scenesLoader'
+import Storage from './Storage/Storage'
+import locales from './locales/ru.json'
 
+// TODO админ панель для редактирования обучения
 export default class Bot {
-  private readonly client: ClientTelegraf
-  private readonly storage: Storage
-  private readonly eventLoader: EventLoader
-  private readonly webhookURL?: string
+  private telegraf
 
-  public constructor(tokenBot: string, webhookURL?: string) {
-    this.client = new ClientTelegraf(tokenBot)
-    this.storage = new StoragePrisma()
-    this.eventLoader = new EventLoader()
-    this.webhookURL = webhookURL
+  public constructor(tokenBot: string) {
+    this.telegraf = new Telegraf<BotContext>(tokenBot)
   }
 
-  public async start(): Promise<boolean> {
-    await this.eventLoader.init()
-    this.startHandlingEvents()
-    if (this.webhookURL) {
-      await this.client.setWebhook(this.webhookURL)
-      return true
-    } else {
-      await this.client.deleteWebhook()
-      await this.client.launch()
-      return false
+  public async start(webhookURL?: string): Promise<void> {
+    await this.startHandlingEvents()
+    await this.launch(webhookURL)
+  }
+
+  private async startHandlingEvents(): Promise<void> {
+    await this.useMiddlewares()
+    this.telegraf.start(async ctx => {
+      await ctx.reply(locales.other.start)
+      await goToMainMenu(ctx)
+    })
+    this.telegraf.help(async ctx => {
+      await ctx.reply(locales.other.help)
+      await goToMainMenu(ctx)
+    })
+    this.telegraf.command('saveme', saveMe)
+    this.telegraf.hears(locales.keyboards.main_keyboard.discord, ctx => {
+      ctx.reply(locales.other.discord, getDiscordInlineKeyboard())
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.ecosystem, ctx => {
+      ctx.reply(locales.other.ecosystem_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.calendar, ctx => {
+      ctx.reply(locales.other.calendar_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.support, ctx => {
+      ctx.reply(locales.other.support_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.chat, ctx => {
+      ctx.reply(locales.other.chat_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.nft, ctx => {
+      ctx.reply(locales.other.nft_html, {parse_mode: 'HTML'})
+    })
+    this.telegraf.hears(locales.keyboards.main_keyboard.training, ctx => {
+      ctx.scene.enter('trainingSections')
+    })
+    this.telegraf.on('text', async ctx => {
+      await ctx.reply(locales.shared.unknown_command)
+      await goToMainMenu(ctx)
+    })
+    this.telegraf.action(/^.*/, showAlertOldButton)
+    this.telegraf.catch((error, ctx) => {
+      console.error(ctx, error)
+      ctx.reply(locales.shared.something_went_wrong)
+    })
+  }
+
+  private async useMiddlewares(): Promise<void> {
+    this.telegraf.use(onlyPrivate())
+    const storage = new Storage()
+    this.telegraf.use(addStorageToContext(storage))
+    this.telegraf.use(updateUserOfStorage())
+    const localSession = new LocalSession({database: 'sessions_db.json'})
+    this.telegraf.use(localSession.middleware())
+    const scenes = await loadScenes()
+    const stage = new Scenes.Stage(scenes)
+    this.telegraf.use(stage.middleware())
+  }
+
+  private async launch(webhookURL?: string): Promise<void> {
+    if (webhookURL) await this.telegraf.telegram.setWebhook(webhookURL)
+    else {
+      await this.telegraf.telegram.deleteWebhook()
+      await this.telegraf.launch()
     }
   }
 
-  private startHandlingEvents(): void {
-    this.startHandlingCommands()
-    this.startHandlingTexts()
-    this.startHandlingCallbackQuery()
+  public webhookCallback(path: string): WebhookCallback {
+    return this.telegraf.webhookCallback(path)
   }
 
-  private startHandlingCommands(): void {
-    for (const command of this.eventLoader.commands) {
-      const callback = this.convertToEventCallback(command.execute)
-      this.client.onCommand(command.name, callback)
-    }
-  }
-
-  private startHandlingTexts(): void {
-    const callback = this.convertToEventCallback(this.eventLoader.textComplexExecute)
-    this.client.onText(callback)
-  }
-
-  private startHandlingCallbackQuery(): void {
-    const callback = this.convertToEventCallback(this.eventLoader.callbackQueryComplexExecute)
-    this.client.onCallbackQuery(callback)
-  }
-
-  private convertToEventCallback<T extends TypeContext>(execute: EventExecute<T>): EventCallback<T> {
-    return (context: EventContext<T>) => execute(context, this.storage)
-  }
-
-  public webhookCallback(path: string): WebhookCallbackClient {
-    return this.client.webhookCallback(path)
-  }
-
-  public stop(): void {
-    this.client.stop()
+  public stop(reason?: string): void {
+    this.telegraf.stop(reason)
   }
 }

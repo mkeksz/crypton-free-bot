@@ -1,0 +1,64 @@
+{
+  "keyboards": {
+    "back_keyboard": {
+      "back": "◀️ Назад"
+    },
+    "main_keyboard": {
+      "training": "Обучение криптовалюте",
+      "discord": "Discord",
+      "ecosystem": "Экосистема Crypton",
+      "calendar": "Календарь событий LITE",
+      "support": "Поддержка LITE",
+      "chat": "Бесплатный чат Crypton",
+      "nft": "NFT drop Crypton"
+    }
+  },
+  "inline_keyboards": {
+    "discord": "Перейти в канал",
+    "back": "« Назад",
+    "back_to_menu": "« Возврат в меню"
+  },
+  "scenes": {
+    "training_sections": {
+      "sections": "Выберите раздел обучения",
+      "back": "Возврат в меню.",
+      "locked_section": "Этот раздел пока закрыт. Сначала пройдите доступные разделы.",
+      "selected_section": "Выбран раздел: %title%\nВыберите подраздел.",
+      "stars_quiz": "Вы получили %stars% за прохождение Quiz этого раздела."
+    },
+    "lessons": {
+      "next_lesson": "Следующий этап »",
+      "end_lessons": "Поздравляю! Ты закончил раздел %title%.",
+      "start_quiz": "Пройти квиз и подтвердить свои знания",
+      "later_quiz": "Пройти квиз позднее",
+      "wrong_answer": "Ответ неверный! Подождите 60с.",
+      "wait": "Подождите %time%с.",
+      "wrong_text_answer": "Ответ неверный! Нажми \"Назад\" и попробуй ещё раз.",
+      "right_text_answer": "Верно!",
+      "quiz": "Quiz"
+    },
+    "quizzes": {
+      "new_sections": "Вам доступны новые разделы:\n%sections%",
+      "quiz_complete": "Quiz пройден!\n%answers% верных ответов из %quizzes%.\nПолучено звёзд: %stars%"
+    }
+  },
+  "shared": {
+    "something_went_wrong": "❌ Неизвестная ошибка...\n\nПопробуйте ещё раз.",
+    "main_menu": "Вы в главном меню.",
+    "unknown_command": "Неизвестная команда!",
+    "old_button": "Эта кнопка сейчас не работает или устарела!\n\nРаботающие кнопки находятся внизу диалога.",
+    "emoji_locked": "\uD83D\uDD12",
+    "emoji_checked": "✅",
+    "emoji_star": "⭐️"
+  },
+  "other": {
+    "start": "Добро пожаловать!",
+    "help": "❓ Нажми на иконку в правом нижнем углу чтобы открыть Telegram-клавиатуру и выбери раздел, в который ты хочешь попасть.",
+    "discord": "Описание Discord",
+    "ecosystem_html": "Превью текст экосистемы. <a href='https://example.com'>ссылка</a>",
+    "calendar_html": "Бесплатная версия календаря. <a href='https://example.com'>ссылка</a>",
+    "support_html": "Описание услуги поддержки. <a href='https://example.com'>ссылка</a>",
+    "chat_html": "Бесплатный чат криптон. <a href='https://example.com'>ссылка</a>",
+    "nft_html": "Описание NFT drop Crypton."
+  }
+}

@@ -1,11 +1,10 @@
 node_modules
 .git
 .idea
-test
-.mocharc.json
-Procfile
+.gitignore
 README.md
 .eslintrc.json
 .env.example
 Dockerfile
 dist
+sessions_db.json

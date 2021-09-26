@@ -1,15 +1,10 @@
-import Bot from './index'
+import Bot from '@/src/Bot'
 import config from './config'
 import express from 'express'
+// TODO сохранять логи console.error()
+const bot = new Bot(config.TOKEN_BOT)
 
-const bot = new Bot(config.TOKEN_BOT, config.WEBHOOK_URL)
-
-bot.start().then(isWebhook => {
-  console.info('The bot is running!')
-  if (isWebhook) console.info('Webhook is launch!')
-  process.once('SIGINT', stopProcess)
-  process.once('SIGTERM', stopProcess)
-})
+bot.start(config.WEBHOOK_URL).then(() => console.info('The bot is running!'))
 
 if (config.WEBHOOK_URL) {
   const webhookURL = new URL(config.WEBHOOK_URL)
@@ -17,6 +12,9 @@ if (config.WEBHOOK_URL) {
   app.use(bot.webhookCallback(webhookURL.pathname))
   app.listen(config.PORT, () => console.info(`Webhook server is running on ${config.PORT} port!`))
 }
+
+process.once('SIGINT', stopProcess)
+process.once('SIGTERM', stopProcess)
 
 function stopProcess() {
   bot.stop()

@@ -10,7 +10,6 @@ generator client {
 model User {
   telegramID        Int                    @id
   completedSections UserCompletedSection[]
-  step              String?
 }
 
 model Section {
