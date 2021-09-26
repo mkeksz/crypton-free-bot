@@ -11,7 +11,7 @@ import {loadScenes} from './util/scenesLoader'
 import Storage from './Storage/Storage'
 import locales from './locales/ru.json'
 
-
+// TODO админ панель для редактирования обучения
 export default class Bot {
   private telegraf
 
