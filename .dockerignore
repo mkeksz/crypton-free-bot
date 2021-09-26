@@ -1,0 +1,9 @@
+node_modules
+.git
+.idea
+.gitignore
+README.md
+.eslintrc.json
+.env.example
+Dockerfile
+dist
