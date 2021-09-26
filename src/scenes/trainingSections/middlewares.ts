@@ -9,7 +9,7 @@ export function checkAndAddSectionToState(isSubsection: boolean): Middleware<Act
     const sectionID = getSectionIDFromActionData(ctx)
     const section = await ctx.storage.getSectionOfUserByID(ctx.from!.id, sectionID)
     const hasParent = section?.parentSectionID !== null
-    if (!section || (!isSubsection && hasParent) || (isSubsection && !hasParent)) return showAlertOldButton(ctx)
+    if (!section || (!isSubsection && hasParent) || (isSubsection && !hasParent) || (isSubsection && !section.lessons.length)) return showAlertOldButton(ctx)
     if (!section.available) return showAlertLockedSection(ctx)
     ctx.state['section'] = section
     return next()

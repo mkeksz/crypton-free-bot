@@ -8,6 +8,8 @@ export interface SectionOfUser extends Section {
   available: boolean,
   stars: StarsOfSection,
   availableQuiz: boolean,
-  hasQuizzes: boolean
-  fullCompleted: boolean
+  hasQuizzes: boolean,
+  fullCompleted: boolean,
+  quizzes: {id: number}[],
+  lessons: {id: number}[]
 }

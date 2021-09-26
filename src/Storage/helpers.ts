@@ -1,18 +1,25 @@
 import {Section} from '@prisma/client'
 import {SectionOfUser, StarsOfSection} from '@/src/types/storage'
 
-type FullSectionInfo = (Section & {users: {userID: number, stars: number, fullCompleted: boolean}[], opensAfterSections: {users: {sectionID: number}[]}[], quizzes: {id: number}[]})
+type FullSectionInfo = (Section & {
+  users: {userID: number, stars: number, fullCompleted: boolean}[],
+  opensAfterSections: {users: {sectionID: number}[]}[],
+  quizzes: {id: number}[],
+  lessons: {id: number}[]
+})
 type OptionsOfInclude = {
   users: {select: {userID: true, stars: true, fullCompleted: true}, where: {userID: number}},
   opensAfterSections: {select: {users: {select: {sectionID: true}, where: {userID: number, fullCompleted: true}}}},
-  quizzes: {select: {id: true}}
+  quizzes: {select: {id: true}},
+  lessons: {select: {id: true}}
 }
 
 export function getOptionsOfIncludeForSections(userID: number): OptionsOfInclude {
   return {
     users: {where: {userID}, select: {userID: true, stars: true, fullCompleted: true}},
     opensAfterSections: {select: {users: {where: {userID, fullCompleted: true}, select: {sectionID: true}}}},
-    quizzes: {select: {id: true}}
+    quizzes: {select: {id: true}},
+    lessons: {select: {id: true}}
   }
 }
 
