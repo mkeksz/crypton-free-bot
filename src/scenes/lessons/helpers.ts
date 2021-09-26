@@ -2,6 +2,7 @@ import {InlineKeyboardButton, InlineKeyboardMarkup} from 'telegraf/typings/core/
 import {Markup} from 'telegraf'
 import {LessonStorage, SectionOfUser} from '@/src/types/storage'
 import {ActionContext, BotContext} from '@/src/types/telegraf'
+import {getUnixTime} from '@/src/util/common'
 import locales from '@/src/locales/ru.json'
 
 export function getSectionIDFromSceneState(ctx: BotContext): number | undefined {
@@ -24,13 +25,26 @@ export async function showLesson(ctx: BotContext): Promise<void> {
   //   if (!userID || !messageID) return
   //   await storage.setStepUser(userID, {lessonID: lesson.id, messageID, name: StepName.waitAnswerLesson})
   // }
-  // if (lesson.answerButtons) buttons = INLINE_KEYBOARDS.answerButtons(lesson, hasTimeButtons)
   const section = ctx.state['section'] as SectionOfUser
   const isLastLesson = ctx.state['isLastLesson'] as boolean
-  const replyMarkup = isLastLesson
-    ? getEndLessonsInlineKeyboard(section.id).reply_markup
-    : getNextLessonInlineKeyboard(section.id, lesson.position + 1).reply_markup
+
+  let replyMarkup = getNextLessonInlineKeyboard(section.id, lesson.position + 1).reply_markup
+  if (isLastLesson) replyMarkup = getEndLessonsInlineKeyboard(section.id).reply_markup
+  if (lesson.answerButtons) replyMarkup = getAnswersInlineKeyboard(lesson, isLastLesson).reply_markup
+
   await ctx.editMessageText(textHTML, {parse_mode: 'HTML', reply_markup: replyMarkup})
+}
+
+export function getAnswersInlineKeyboard(lesson: LessonStorage, isLastLesson: boolean): Markup.Markup<InlineKeyboardMarkup> {
+  const buttonsData = JSON.parse(lesson.answerButtons!) as [text: string, isRight?: 1][]
+
+  const buttons: InlineKeyboardButton[][] = []
+  for (const buttonData of buttonsData) {
+    let callbackData = isLastLesson ? `el:${lesson.sectionID}` : `nl:${lesson.sectionID}:${lesson.position + 1}`
+    if (!buttonData[1]) callbackData = 'al:wrong'
+    buttons.push([{text: buttonData[0], callback_data: callbackData}])
+  }
+  return Markup.inlineKeyboard(buttons)
 }
 
 export function getNextLessonInlineKeyboard(sectionID: number, lessonPosition: number): Markup.Markup<InlineKeyboardMarkup> {
@@ -62,4 +76,11 @@ export function getLessonPositionFromActionData(ctx: ActionContext): number {
   const data = ctx.match[0]
   const [,,lessonPosition] = data.split(':')
   return Number(lessonPosition)
+}
+
+export function getWaitSeconds(ctx: ActionContext): number {
+  const state = ctx.scene.state as {time?: number}
+  if (!state.time) return 0
+  const currentTime = getUnixTime()
+  return 60 - (currentTime - state.time)
 }

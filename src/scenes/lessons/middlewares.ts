@@ -1,8 +1,9 @@
 import {ActionContext, BotContext} from '@/src/types/telegraf'
 import {Middleware} from 'telegraf'
-import {getLessonPositionFromActionData, getSectionIDFromActionData, getSectionIDFromSceneState} from './helpers'
+import {getLessonPositionFromActionData, getSectionIDFromActionData, getSectionIDFromSceneState, getWaitSeconds} from './helpers'
 import {showAlertOldButton} from '@/src/util/alerts'
 import {SectionOfUser} from '@/src/types/storage'
+import locales from '@/src/locales/ru.json'
 
 export function checkAndAddLessonToState(hasActionData: boolean): Middleware<ActionContext | BotContext> {
   return async (ctx, next) => {
@@ -27,6 +28,19 @@ export function checkAndAddSectionToState(hasActionData: boolean): Middleware<Ac
     const section = await ctx.storage.getSectionOfUserByID(ctx.from!.id, stateSectionID)
     if (!section) return showAlertOldButton(ctx)
     ctx.state['section'] = section
+    return next()
+  }
+}
+
+export function checkTime(): Middleware<ActionContext> {
+  return async (ctx, next) => {
+    const waitSeconds = getWaitSeconds(ctx)
+    if (waitSeconds > 0) {
+      const text = locales.scenes.lessons.wait.replace('%time%', String(waitSeconds))
+      return ctx.answerCbQuery(text)
+    }
+    const state = ctx.scene.state as {time?: number}
+    state.time = undefined
     return next()
   }
 }
