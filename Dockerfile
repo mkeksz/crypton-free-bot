@@ -17,5 +17,5 @@ ENV PORT 3000
 EXPOSE $PORT
 CMD ["npm", "run", "start"]
 
-# docker build .
+# docker build -t freebot .
 # docker run -d -p 80:3000 -v freebot_sessions:/app/sessions_db.json --name freebot freebot
