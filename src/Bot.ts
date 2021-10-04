@@ -12,7 +12,6 @@ import {loadScenes} from './util/scenesLoader'
 import Storage from './Storage/Storage'
 import locales from './locales/ru.json'
 
-// TODO админ панель для редактирования обучения
 export default class Bot {
   private telegraf
 
@@ -36,6 +35,9 @@ export default class Bot {
       await goToMainMenu(ctx)
     })
     this.telegraf.command('saveme', saveMe)
+    this.telegraf.command('admin', ctx => {
+      ctx.scene.enter('admin')
+    })
     this.telegraf.hears(locales.keyboards.main_keyboard.discord, ctx => {
       ctx.reply(locales.other.discord, getDiscordInlineKeyboard())
     })
@@ -62,9 +64,12 @@ export default class Bot {
       await goToMainMenu(ctx)
     })
     this.telegraf.action(/^.*/, showAlertOldButton)
-    this.telegraf.catch((error, ctx) => {
+    // TODO нужен дополнительный catch (не обрабатывает ошибки пришедшие с телеграмма. Например, при редактировании одинакового сообщения)
+    this.telegraf.catch(async (error, ctx) => {
       console.error(ctx, error)
-      ctx.reply(locales.shared.something_went_wrong)
+      ctx.scene.reset()
+      await ctx.reply(locales.shared.something_went_wrong)
+      await goToMainMenu(ctx)
     })
   }
 

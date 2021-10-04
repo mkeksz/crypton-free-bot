@@ -1,12 +1,20 @@
 import {Scenes, Telegraf} from 'telegraf'
-import {getEndLessonsInlineKeyboard, getNextLessonInlineKeyboard, getQuizSectionInlineKeyboard, showLesson} from './helpers'
+import {
+  getEndLessonsInlineKeyboard,
+  getNextLessonInlineKeyboard,
+  getNoneQuizInlineKeyboard,
+  getQuizSectionInlineKeyboard
+} from './inlineKeyboards'
 import {checkAndAddSectionToState} from '@/src/middlewares/shared/checkAndAddSectionToState'
 import {checkAndAddLessonToState, hasRightAnswer, checkTime,} from './middlewares'
+import {getMessageText} from '@/src/util/message'
 import {SectionOfUser} from '@/src/types/storage'
 import {BotContext} from '@/src/types/telegraf'
 import {getUnixTime} from '@/src/util/common'
 import locales from '@/src/locales/ru.json'
 import {saveMe} from '@/src/util/mainMenu'
+import {showLesson} from './helpers'
+
 
 const lessons = new Scenes.BaseScene<BotContext>('lessons')
 
@@ -21,7 +29,8 @@ lessons.action(/^el:[0-9]+$/, checkTime(), checkAndAddSectionToState(true), asyn
   const fullCompleted = !section.hasQuizzes
   await ctx.storage.updateCompletedSection(ctx.from!.id, section.id, fullCompleted)
   const text = locales.scenes.lessons.end_lessons.replace('%title%', section.textButton)
-  ctx.editMessageText(text, getQuizSectionInlineKeyboard(section.id))
+  const inlineKeyboard = section.hasQuizzes ? getQuizSectionInlineKeyboard(section.id) : getNoneQuizInlineKeyboard(section.id)
+  ctx.editMessageText(text, inlineKeyboard)
 })
 
 lessons.action('al:wrong', checkTime(), ctx => {
@@ -42,7 +51,7 @@ lessons.action(/^lsq:[0-9]+$/, checkAndAddSectionToState(true), ctx => {
 
 lessons.on('text', Telegraf.optional(hasRightAnswer(), ctx => {
   const state = ctx.scene.state as {rightAnswer?: string, editMessageID?: number, lessonPosition?: number, sectionID: number, isLastLesson?: boolean}
-  const answer = 'text' in ctx.message! ? ctx.message.text : ''
+  const answer = getMessageText(ctx).text
   const isRightAnswer = answer === state.rightAnswer
   let inlineKeyboard = getNextLessonInlineKeyboard(state.sectionID, isRightAnswer ? state.lessonPosition! + 1 : state.lessonPosition!, !isRightAnswer)
   if (isRightAnswer && state.isLastLesson) inlineKeyboard = getEndLessonsInlineKeyboard(state.sectionID)

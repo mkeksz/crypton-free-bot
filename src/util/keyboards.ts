@@ -18,3 +18,12 @@ export function getBackKeyboard(): Markup.Markup<ReplyKeyboardMarkup> {
   const keyboard = Markup.keyboard([[backKeyboard.back]])
   return keyboard.resize()
 }
+
+
+export function checkTextMainKeyboard(text: string): boolean {
+  let isMainKeyboard = false
+  for (const value of Object.values(locales.keyboards.main_keyboard)) {
+    if (value === text) isMainKeyboard = true
+  }
+  return isMainKeyboard
+}

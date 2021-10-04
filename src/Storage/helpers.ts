@@ -1,5 +1,5 @@
-import {Section} from '@prisma/client'
-import {SectionOfUser, StarsOfSection} from '@/src/types/storage'
+import {Lesson, Quiz, Section} from '@prisma/client'
+import {LessonStorage, QuizStorage, SectionOfUser, StarsOfSection} from '@/src/types/storage'
 
 type FullSectionInfo = (Section & {
   users: {userID: number, stars: number, fullCompleted: boolean}[],
@@ -31,6 +31,20 @@ export function convertToSectionOfUser(section: FullSectionInfo): SectionOfUser 
     availableQuiz: checkAvailableQuiz(section),
     hasQuizzes: checkHasQuizzes(section),
     fullCompleted: checkFullCompleted(section)
+  }
+}
+
+export function convertToLessonStorage(lesson: Lesson): LessonStorage {
+  return {
+    ...lesson,
+    entitiesArray: lesson.entities ? JSON.parse(lesson.entities) : undefined
+  }
+}
+
+export function convertToQuizStorage(quiz: Quiz): QuizStorage {
+  return {
+    ...quiz,
+    entitiesArray: quiz.entities ? JSON.parse(quiz.entities) : undefined
   }
 }
 

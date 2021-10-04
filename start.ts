@@ -1,7 +1,6 @@
 import Bot from '@/src/Bot'
 import config from './config'
 import express from 'express'
-// TODO сохранять логи console.error()
 const bot = new Bot(config.TOKEN_BOT)
 
 bot.start(config.WEBHOOK_URL).then(() => console.info('The bot is running!'))

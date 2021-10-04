@@ -35,7 +35,9 @@
 
 `DATABASE_URL` - URL базы данных MySQL (примеры можно найти [здесь](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference/#specify-a-mysql-data-source))
 
-`WEBHOOK_URL` - URL адрес с SSL для подключения по webhook (Если пустой, то бот будет работать на long polling)
+`WEBHOOK_URL` - URL адрес с SSL для подключения по webhook (если пустой, то бот будет работать на long polling)
 
-`PORT` - Порт, который будет слушать наш webhook сервер (Не требуется, если не указан `WEBHOOK_URL`)
+`PORT` - Порт, который будет слушать наш webhook сервер (не требуется, если не указан `WEBHOOK_URL`)
+
+`TG_ADMIN_ID` - ID главного админа в боте Telegram (он сможет добавлять других админов)
 ***

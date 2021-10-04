@@ -2,9 +2,11 @@ import {Middleware} from 'telegraf'
 import {getLessonPositionFromActionData, getWaitSeconds} from './helpers'
 import {ActionContext, BotContext} from '@/src/types/telegraf'
 import {showAlertOldButton} from '@/src/util/alerts'
-import {Predicate} from 'telegraf/typings/composer'
 import {SectionOfUser} from '@/src/types/storage'
 import locales from '@/src/locales/ru.json'
+import {getMessageText} from '@/src/util/message'
+import {goToMainMenu} from '@/src/util/mainMenu'
+import {checkTextMainKeyboard} from '@/src/util/keyboards'
 
 export function checkAndAddLessonToState(hasActionData: boolean): Middleware<ActionContext | BotContext> {
   return async (ctx, next) => {
@@ -32,8 +34,13 @@ export function checkTime(): Middleware<ActionContext> {
   }
 }
 
-export function hasRightAnswer(): Predicate<BotContext> {
-  return ctx => {
+export function hasRightAnswer(): (ctx: BotContext) => Promise<boolean> {
+  return async ctx => {
+    const text = getMessageText(ctx)
+    if (checkTextMainKeyboard(text.text)) {
+      await goToMainMenu(ctx)
+      return false
+    }
     const state = ctx.scene.state as {rightAnswer?: string, editMessageID?: number, lessonPosition?: number, sectionID?: number}
     return !!(state.rightAnswer && state.editMessageID !== undefined && state.lessonPosition !== undefined && state.sectionID !== undefined)
   }

@@ -1,5 +1,5 @@
 import {Middleware} from 'telegraf'
-import {getSectionIDFromActionData, getSectionIDFromSceneState} from '@/src/util/section'
+import {getSectionIDFromActionData, getSectionIDFromSceneState} from '@/src/util/sections'
 import {ActionContext, BotContext} from '@/src/types/telegraf'
 import {showAlertOldButton} from '@/src/util/alerts'
 

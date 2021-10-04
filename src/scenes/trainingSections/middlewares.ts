@@ -2,7 +2,7 @@ import {Middleware} from 'telegraf'
 import {showAlertLockedSection} from './helpers'
 import {showAlertOldButton} from '@/src/util/alerts'
 import {ActionContext} from '@/src/types/telegraf'
-import {getSectionIDFromActionData} from '@/src/util/section'
+import {getSectionIDFromActionData} from '@/src/util/sections'
 
 export function checkAndAddSectionToState(isSubsection: boolean): Middleware<ActionContext> {
   return async (ctx, next) => {

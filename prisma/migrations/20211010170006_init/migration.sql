@@ -32,10 +32,14 @@ CREATE TABLE `Lesson` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `position` INTEGER NOT NULL,
     `sectionID` INTEGER NOT NULL,
-    `text` VARCHAR(191) NOT NULL,
-    `media` VARCHAR(191),
-    `answerButtons` VARCHAR(191),
-    `answer` VARCHAR(191),
+    `title` VARCHAR(191) NOT NULL,
+    `text` TEXT NOT NULL,
+    `entities` TEXT,
+    `media` TEXT,
+    `video` TEXT,
+    `photo` TEXT,
+    `answerButtons` TEXT,
+    `answer` TEXT,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -45,8 +49,10 @@ CREATE TABLE `Quiz` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `position` INTEGER NOT NULL,
     `sectionID` INTEGER NOT NULL,
-    `text` VARCHAR(191) NOT NULL,
-    `buttons` VARCHAR(191) NOT NULL,
+    `title` VARCHAR(191) NOT NULL,
+    `text` TEXT NOT NULL,
+    `entities` TEXT,
+    `buttons` TEXT NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

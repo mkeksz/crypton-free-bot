@@ -44,10 +44,14 @@ model Lesson {
   position      Int
   section       Section @relation(fields: [sectionID], references: [id])
   sectionID     Int
-  text          String
-  media         String?
-  answerButtons String?
-  answer        String?
+  title         String
+  text          String  @db.Text
+  entities      String? @db.Text
+  media         String? @db.Text
+  video         String? @db.Text
+  photo         String? @db.Text
+  answerButtons String? @db.Text
+  answer        String? @db.Text
 }
 
 model Quiz {
@@ -55,6 +59,8 @@ model Quiz {
   position  Int
   section   Section @relation(fields: [sectionID], references: [id])
   sectionID Int
-  text      String
-  buttons   String
+  title     String
+  text      String  @db.Text
+  entities  String? @db.Text
+  buttons   String  @db.Text
 }
