@@ -64,7 +64,6 @@ export default class Bot {
       await goToMainMenu(ctx)
     })
     this.telegraf.action(/^.*/, showAlertOldButton)
-    // TODO нужен дополнительный catch (не обрабатывает ошибки пришедшие с телеграмма. Например, при редактировании одинакового сообщения)
     this.telegraf.catch(async (error, ctx) => {
       console.error(ctx, error)
       ctx.scene.reset()
