@@ -126,6 +126,8 @@
     "calendar_html": "Бесплатная версия календаря. <a href='https://example.com'>ссылка</a>",
     "support_html": "Описание услуги поддержки. <a href='https://example.com'>ссылка</a>",
     "chat_html": "Бесплатный чат криптон. <a href='https://example.com'>ссылка</a>",
-    "nft_html": "Описание NFT drop Crypton."
+    "nft_html": "Описание NFT drop Crypton.",
+    "add_admin": "Пользователь получил доступ администратора.",
+    "remove_admin": "Пользователь потерял доступ администратора."
   }
 }

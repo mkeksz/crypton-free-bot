@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE `User` (
     `telegramID` INTEGER NOT NULL,
+    `admin` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`telegramID`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, User} from '@prisma/client'
 import {
   convertToLessonStorage,
   convertToQuizStorage,
@@ -198,12 +198,20 @@ export default class Storage {
     await this.updateCompletedSection(userID, completedSection.section.parentSectionID, true)
   }
 
-  public async addUserIfNeed(userID: number): Promise<void> {
+  public async addUserIfNeed(userID: number, admin?: boolean): Promise<void> {
     await this.prisma.user.upsert({
       where: {telegramID: userID},
-      create: {telegramID: userID},
-      update: {},
+      create: {telegramID: userID, admin},
+      update: {admin},
       select: {telegramID: true}
     })
+  }
+
+  public async getAllAdmins(): Promise<User[]> {
+    return await this.prisma.user.findMany({where: {admin: true}})
+  }
+
+  public async getUserByID(id: number): Promise<User | null> {
+    return await this.prisma.user.findUnique({where: {telegramID: id}})
   }
 }

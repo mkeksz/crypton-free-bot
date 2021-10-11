@@ -10,6 +10,7 @@ generator client {
 model User {
   telegramID        Int                    @id
   completedSections UserCompletedSection[]
+  admin             Boolean                @default(false)
 }
 
 model Section {

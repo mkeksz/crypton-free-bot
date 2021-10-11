@@ -1,3 +1,4 @@
+import {onlyAdmin} from '@/src/middlewares/admin/onlyAdmin'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const LocalSession = require('telegraf-session-local')
 import {Scenes, Telegraf} from 'telegraf'
@@ -35,7 +36,7 @@ export default class Bot {
       await goToMainMenu(ctx)
     })
     this.telegraf.command('saveme', saveMe)
-    this.telegraf.command('admin', ctx => {
+    this.telegraf.command('admin', onlyAdmin(), ctx => {
       ctx.scene.enter('admin')
     })
     this.telegraf.hears(locales.keyboards.main_keyboard.discord, ctx => {
@@ -58,6 +59,22 @@ export default class Bot {
     })
     this.telegraf.hears(locales.keyboards.main_keyboard.training, ctx => {
       ctx.scene.enter('trainingSections')
+    })
+    this.telegraf.hears(/^\/add_admin [0-9]+$/, onlyAdmin(true), async ctx => {
+      const data = ctx.match[0]
+      const [,userID] = data.split(' ')
+      await ctx.storage.addUserIfNeed(Number(userID), true)
+      ctx.reply(locales.other.add_admin)
+    })
+    this.telegraf.hears(/^\/remove_admin [0-9]+$/, onlyAdmin(true), async ctx => {
+      const data = ctx.match[0]
+      const [,userID] = data.split(' ')
+      await ctx.storage.addUserIfNeed(Number(userID), false)
+      ctx.reply(locales.other.remove_admin)
+    })
+    this.telegraf.command('/admins', onlyAdmin(true), async ctx => {
+      const ids = (await ctx.storage.getAllAdmins()).map(admin => admin.telegramID).join('\n')
+      ctx.reply(ids)
     })
     this.telegraf.on('text', async ctx => {
       await ctx.reply(locales.shared.unknown_command)
