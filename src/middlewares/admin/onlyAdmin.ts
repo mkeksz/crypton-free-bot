@@ -7,7 +7,7 @@ export function onlyAdmin(onlyMainAdmin = false): Middleware<BotContext> {
   return async (ctx, next) => {
     const userID = ctx.from!.id
     const user = await ctx.storage.getUserByID(userID)
-    const isMainAdmin = userID === config.TG_ADMIN_ID
+    const isMainAdmin = config.TG_ADMIN_ID.indexOf(userID) !== -1
     if (!user || (onlyMainAdmin && !isMainAdmin) || (!user.admin && !isMainAdmin)) {
       ctx.scene.reset()
       return ctx.reply(locales.shared.only_admin)
